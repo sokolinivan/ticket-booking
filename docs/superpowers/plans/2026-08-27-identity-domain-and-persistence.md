@@ -514,15 +514,15 @@ git commit -m "feat(identity): add identity indexes and constraints"
 - Consumes: completed EF model and `dotnet ef` tooling.
 - Produces: discoverable `InitialIdentity` migration owned by Identity Core; `Up` creates schema and five tables with all keys/FKs/indexes/version columns, while `Down` drops only Identity-owned objects.
 
-- [ ] **Step 1: Add design dependency and write a failing migration-discovery test**
+- [x] **Step 1: Add design dependency and write a failing migration-discovery test**
 
 Reference `Microsoft.EntityFrameworkCore.Design` with `PrivateAssets="all"`. Assert `context.Database.GetMigrations()` contains exactly the initial Identity migration and use `IMigrationsAssembly`/migration operations to assert `EnsureSchemaOperation("identity")`, five `CreateTableOperation`s, required columns, internal FKs, and all named indexes.
 
-- [ ] **Step 2: Run the migration metadata test red**
+- [x] **Step 2: Run the migration metadata test red**
 
 Run `dotnet run --project tests/TicketBooking.IntegrationTests -- --treenode-filter "/*/*/IdentityMigrationMetadataTests/*" --minimum-expected-tests 1`; expect no migration discovered.
 
-- [ ] **Step 3: Add the design-time factory and generate the migration**
+- [x] **Step 3: Add the design-time factory and generate the migration**
 
 The factory must use a non-secret design-time placeholder connection only to build metadata and repeat the runtime migrations assembly/history settings. Generate, do not hand-author, the migration:
 
@@ -533,7 +533,7 @@ dotnet ef migrations add InitialIdentity --project src/Backend/Modules/TicketBoo
 
 Inspect generated `Up`, `Down`, designer, and snapshot. Confirm it creates exactly `SystemUsers`, `Roles`, `Permissions`, `SystemUserRoles`, and `RolePermissions` in `identity`, with no foreign key outside that schema and no accidental plaintext password column.
 
-- [ ] **Step 4: Run model and migration metadata tests green**
+- [x] **Step 4: Run model and migration metadata tests green**
 
 ```bash
 dotnet build tests/TicketBooking.IntegrationTests/TicketBooking.IntegrationTests.csproj
@@ -541,7 +541,7 @@ dotnet run --project tests/TicketBooking.IntegrationTests --no-build -- --treeno
 dotnet run --project tests/TicketBooking.IntegrationTests --no-build -- --treenode-filter "/*/*/IdentityMigrationMetadataTests/*" --minimum-expected-tests 1
 ```
 
-- [ ] **Step 5: Commit generated migration as one coherent artifact**
+- [x] **Step 5: Commit generated migration as one coherent artifact**
 
 ```bash
 git add src/Backend/Modules/TicketBooking.Identity.Core tests/TicketBooking.IntegrationTests/Identity/IdentityMigrationMetadataTests.cs
