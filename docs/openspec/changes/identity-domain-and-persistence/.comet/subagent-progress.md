@@ -1,16 +1,16 @@
 # Subagent Progress
 
-- Plan task: Task 4: Implement User Lifecycle Without Physical Deletion (task 2.3)
-- OpenSpec task: 2.3 Implement lifecycle behavior that archives users without physical deletion, and verify unit tests demonstrate retained identity and valid status transitions.
+- Plan task: Task 5: Add IdentityDbContext And API Composition (task 3.1)
+- OpenSpec task: 3.1 Add `IdentityDbContext` and module registration against the shared PostgreSQL connection, and verify a composition test builds the API service provider and creates the context.
 - Stage: done
 - Model: standard
 - Review mode: thorough
 - TDD mode: tdd
-- Implementation commit: fd1dd8c
-- Changed files: SystemUser and SystemUserLifecycleTests
-- RED evidence: expected CS1061 failures for missing lifecycle methods
-- GREEN evidence: focused lifecycle 19/19; full unit project 50/50; build zero warnings/errors
+- Implementation commit: fc2a027
+- Changed files: IdentityDbContext, DependencyInjection, IntegrationTests project and IdentityCompositionTests
+- RED evidence: expected CS0234 before IdentityDbContext existed
+- GREEN evidence: solution build zero warnings/errors; composition test 1/1
 - Review passed: spec PASS; quality APPROVED
 - Review-fix round: 0/2
-- Risk signals: DONE_WITH_CONCERNS; planned Identity filter matched zero tests, full Identity-only unit project used instead
+- Risk signals: DONE_WITH_CONCERNS; PostgreSQL connection and relational metadata intentionally deferred
 - Unresolved feedback: none

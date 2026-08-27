@@ -375,7 +375,7 @@ git commit -m "feat(identity): add retained user lifecycle"
 - Consumes: configuration key `ConnectionStrings:ticketbooking` and all five domain entity types.
 - Produces: internal `IdentityDbContext(DbContextOptions<IdentityDbContext>)`, five internal `DbSet` properties, migrations assembly set to Identity Core, and schema-local history table; DI registration resolvable from a scope.
 
-- [ ] **Step 1: Add IntegrationTests references and write the failing composition test**
+- [x] **Step 1: Add IntegrationTests references and write the failing composition test**
 
 Reference Identity Core and add `Microsoft.Extensions.DependencyInjection` plus configuration support. Build a fresh `ServiceCollection`, supply an in-memory configuration containing a syntactically valid PostgreSQL connection string, invoke registration, build the provider, create a scope, and resolve `IdentityDbContext` without opening a connection.
 
@@ -387,22 +387,22 @@ var context = scope.ServiceProvider.GetRequiredService<IdentityDbContext>();
 await Assert.That(context).IsNotNull();
 ```
 
-- [ ] **Step 2: Run the composition test red**
+- [x] **Step 2: Run the composition test red**
 
 Run `dotnet run --project tests/TicketBooking.IntegrationTests -- --treenode-filter "/*/*/IdentityCompositionTests/*" --minimum-expected-tests 1`; expect compilation failure because the context is absent.
 
-- [ ] **Step 3: Implement context registration and ownership settings**
+- [x] **Step 3: Implement context registration and ownership settings**
 
 Register with `services.AddDbContext<IdentityDbContext>(options => options.UseNpgsql(connectionString, npgsql => npgsql.MigrationsAssembly(typeof(IdentityDbContext).Assembly.FullName).MigrationsHistoryTable("__EFMigrationsHistory", "identity")))`. Fail startup registration with a clear `InvalidOperationException` when `ConnectionStrings:ticketbooking` is missing. Define DbSets for `SystemUser`, `Role`, `Permission`, `SystemUserRole`, and `RolePermission`; call `modelBuilder.HasDefaultSchema("identity")` and `ApplyConfigurationsFromAssembly` in `OnModelCreating`.
 
-- [ ] **Step 4: Run composition and API build green**
+- [x] **Step 4: Run composition and API build green**
 
 ```bash
 dotnet build TicketBooking.slnx --no-restore
 dotnet run --project tests/TicketBooking.IntegrationTests --no-build -- --treenode-filter "/*/*/IdentityCompositionTests/*" --minimum-expected-tests 1
 ```
 
-- [ ] **Step 5: Commit context composition**
+- [x] **Step 5: Commit context composition**
 
 ```bash
 git add src/Backend/Modules/TicketBooking.Identity.Core tests/TicketBooking.IntegrationTests
