@@ -27,6 +27,7 @@ public class InMemoryDb : IAsyncInitializer, IAsyncDisposable
 
     public ValueTask DisposeAsync()
     {
+        GC.SuppressFinalize(this);
         // Simulate async teardown - e.g. closing connections, removing containers
         _store.Clear();
         return ValueTask.CompletedTask;

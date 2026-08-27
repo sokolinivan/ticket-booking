@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace TicketBooking.SystemTests;
 
 public class DependencyInjectionTests
@@ -39,7 +41,7 @@ public class SharedDatabaseTests(InMemoryDb db)
     {
         var result = Calculator.Add(2, 3);
 
-        await db.SetAsync("result", result.ToString());
+        await db.SetAsync("result", result.ToString(CultureInfo.InvariantCulture));
 
         await Assert.That(await db.GetAsync("result")).IsEqualTo("5");
     }

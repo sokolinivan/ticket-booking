@@ -4,10 +4,10 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AnalysisLevel>latest</AnalysisLevel>
-        <AnalysisMode>None</AnalysisMode>
-        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-        <CodeAnalysisTreatWarningsAsErrors>false</CodeAnalysisTreatWarningsAsErrors>
-        <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+        <AnalysisMode>Recommended</AnalysisMode>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <AllowMissingPrunePackageData>true</AllowMissingPrunePackageData>
     </PropertyGroup>
 </Project>

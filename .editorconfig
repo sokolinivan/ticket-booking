@@ -85,3 +85,13 @@ tab_width = 2
 charset = utf-8
 insert_final_newline = true
 end_of_line = lf
+
+# --- Test projects -----------------------------------------------------------
+# TUnit test-method names deliberately use underscores (e.g. Add_ReturnsSum) and
+# the test support Calculator is an injectable instance type (ClassDataSource<T>).
+# These are intentional conventions, so relax the analyzer rules that would
+# otherwise fail the test projects under warnings-as-errors (Design 2.3).
+[tests/**/*.cs]
+dotnet_diagnostic.CA1707.severity = none
+dotnet_diagnostic.CA1822.severity = none
+dotnet_diagnostic.IDE0060.severity = none
