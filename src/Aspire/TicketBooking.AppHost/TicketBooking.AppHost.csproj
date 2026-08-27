@@ -9,4 +9,12 @@
         <UserSecretsId>684b1338-c2f3-4de2-8456-1e7e09c5034e</UserSecretsId>
     </PropertyGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\..\Backend\TicketBooking.Api\TicketBooking.Api.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Aspire.Hosting.JavaScript" />
+    </ItemGroup>
+
 </Project>

@@ -8,9 +8,9 @@
 
 - [x] 2.1 Update `Directory.Build.props` to enable analyzer enforcement: `AnalysisMode=Recommended` (or `All`), `EnforceCodeStyleInBuild=true`, `CodeAnalysisTreatWarningsAsErrors=true`, `TreatWarningsAsErrors=true`, and keep `Nullable=enable` and `AnalysisLevel=latest`
 - [x] 2.2 Run a full `dotnet build` over the solution and fix every compiler/analyzer warning the current tree produces (adding only justified per-warning `NoWarn` where the warning comes from unavoidable Aspire/template or third-party code) so the tree builds with zero warnings
-- [ ] 2.3 Confirm a deliberately introduced warning (e.g., a trivial unused-field or style violation) causes `dotnet build` to fail, then remove it, proving warnings-as-errors is active
+- [x] 2.3 Confirm a deliberately introduced warning (e.g., a trivial unused-field or style violation) causes `dotnet build` to fail, then remove it, proving warnings-as-errors is active
 
 ## 3. Verification
 
-- [ ] 3.1 Run `dotnet format --verify-no-changes` across the solution and verify it reports no changes needed
-- [ ] 3.2 Rebuild the full solution cleanly with warnings-as-errors active and verify exit code 0 with zero warnings
+- [x] 3.1 Run `dotnet format --verify-no-changes` across the solution and verify it reports no changes needed
+- [x] 3.2 Rebuild the full solution cleanly with warnings-as-errors active and verify exit code 0 with zero warnings

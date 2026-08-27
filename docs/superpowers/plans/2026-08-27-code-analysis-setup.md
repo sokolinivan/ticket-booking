@@ -2,6 +2,7 @@
 change: code-analysis-setup
 design-doc: docs/superpowers/specs/2026-08-27-code-analysis-setup-design.md
 base-ref: 0d576b1d4edaf0986065f02811752d53a54862f1
+archived-with: 2026-08-27-code-analysis-setup
 ---
 
 # Code Analysis & Formatting Setup Implementation Plan
@@ -62,7 +63,7 @@ indent_size = 4
 tab_width = 4
 insert_final_newline = true
 charset = utf-8
-end_of_line = crlf
+end_of_line = lf
 
 # File layout / usings
 dotnet_sort_system_directives_first = true
@@ -147,7 +148,9 @@ Run:
 ```bash
 dotnet format TicketBooking.slnx --verify-no-changes --include src/Backend/TicketBooking.Api src/Backend/TicketBooking.BuildingBlocks
 ```
-Expected: command exits 0 and reports no files need formatting, confirming the `.editorconfig` is honored and current C# files are already conforming (4-space indent, crlf, final newline). `TicketBooking.BuildingBlocks/Class1.cs` currently lacks a final newline — if it is flagged here, that is expected and is fixed in Task 2.
+Expected: command exits 0 and reports no files need formatting, confirming the `.editorconfig` is honored and current C# files are already conforming (4-space indent, final newline). `TicketBooking.BuildingBlocks/Class1.cs` currently lacks a final newline — if it is flagged here, that is expected and is fixed in Task 2.
+
+> **Ruling (user):** `[*.cs]` uses `end_of_line = lf` (not crlf) so the repo stores LF without a `.gitattributes`, avoiding cross-platform churn. Task 4 re-ran `dotnet format` to revert the initial CRLF conversion.
 
 - [x] **Step 3: Commit**
 
@@ -306,7 +309,7 @@ git commit -m "chore: enable warnings-as-errors and remediate analyzer warnings"
 
 This implements tasks.md 2.3: deliberately introduce a trivial compiler warning and show `dotnet build` fails, then remove it.
 
-- [ ] **Step 1: Introduce a deliberate warning**
+- [x] **Step 1: Introduce a deliberate warning**
 
 Add an unused local at the top of `Program.cs` (after `var builder = WebApplication.CreateBuilder(args);`):
 
@@ -316,7 +319,7 @@ int _deliberateUnusedLocal = 0;
 
 This produces compiler warning CS0219 ("The variable ... assigned but never used"). Under `TreatWarningsAsErrors=true` it becomes an error.
 
-- [ ] **Step 2: Confirm the build fails**
+- [x] **Step 2: Confirm the build fails**
 
 Run:
 ```bash
@@ -324,11 +327,11 @@ dotnet build TicketBooking.slnx
 ```
 Expected: `Build FAILED.` with the message `CS0219` reported as an **error** (e.g. `error CS0219`), and a non-zero exit code. This proves warnings-as-errors is active.
 
-- [ ] **Step 3: Remove the deliberate warning**
+- [x] **Step 3: Remove the deliberate warning**
 
 Delete the `int _deliberateUnusedLocal = 0;` line added in Step 1 so `Program.cs` returns to its Task 2 state.
 
-- [ ] **Step 4: Confirm the build is green again**
+- [x] **Step 4: Confirm the build is green again**
 
 Run:
 ```bash
@@ -336,7 +339,7 @@ dotnet build TicketBooking.slnx
 ```
 Expected: `Build succeeded.` with `0 Warning(s)`, `0 Error(s)`, exit code 0.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/Backend/TicketBooking.Api/Program.cs
@@ -357,7 +360,7 @@ git commit -m "test: prove warnings-as-errors breaks the build on a deliberate w
 
 This implements tasks.md 3.1.
 
-- [ ] **Step 1: Run the format verification across the solution**
+- [x] **Step 1: Run the format verification across the solution**
 
 Run:
 ```bash
@@ -365,11 +368,11 @@ dotnet format TicketBooking.slnx --verify-no-changes
 ```
 Expected: exits 0 and reports `Format` complete with no files needing changes (`dotnet format` exits non-zero if any file would be reformatted).
 
-- [ ] **Step 2: If the verify fails, apply formatting, then re-verify**
+- [x] **Step 2: If the verify fails, apply formatting, then re-verify**
 
 Only if Step 1 reports files to change: run `dotnet format TicketBooking.slnx`, review the `git diff` to confirm the changes are formatting-only, commit if the output is accepted, then re-run Step 1 until it returns exit 0.
 
-- [ ] **Step 3: Commit any formatting fixups**
+- [x] **Step 3: Commit any formatting fixups**
 
 If Step 2 produced changes:
 ```bash
@@ -388,7 +391,7 @@ If Step 1 already passed, there is nothing to commit in this task.
 **Interfaces:**
 - Consumes: All prior tasks. Produces: the end-state evidence required by tasks.md 3.2 and the design's testing strategy (Design 3).
 
-- [ ] **Step 1: Clean and rebuild the full solution**
+- [x] **Step 1: Clean and rebuild the full solution**
 
 Run:
 ```bash
@@ -396,11 +399,11 @@ dotnet build TicketBooking.slnx -t:Rebuild
 ```
 Expected: `Build succeeded.` with `0 Warning(s)`, `0 Error(s)`, exit code 0. This recompiles from scratch so no incremental-cache artifact masks stale warnings.
 
-- [ ] **Step 2: Confirm the analyzer breadth did not cause unexpected failures**
+- [x] **Step 2: Confirm the analyzer breadth did not cause unexpected failures**
 
 Review the build output: no unexpected `error`/`warning` lines; only the enabled `Recommended`-mode rule set is active with no new severities forcing suppressible churn (Design 3 row "Analyzer breadth sane").
 
-- [ ] **Step 3: Final commit (only if the clean rebuild produced any source change)**
+- [x] **Step 3: Final commit (only if the clean rebuild produced any source change)**
 
 If Step 1's rebuild surfaced no changes (expected), there is nothing to commit. If the rebuild revealed any remaining warning requiring a fix, apply it as in Task 2 Step 3 (fix in source, or relax severity in `.editorconfig` per Design 2.3), re-run Step 1, then:
 ```bash

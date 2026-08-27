@@ -1,4 +1,4 @@
-﻿namespace TicketBooking.BuildingBlocks;
+namespace TicketBooking.BuildingBlocks;
 
 public class Class1
 {

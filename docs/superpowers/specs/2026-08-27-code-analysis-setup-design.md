@@ -2,6 +2,8 @@
 comet_change: code-analysis-setup
 role: technical-design
 canonical_spec: openspec
+archived-with: 2026-08-27-code-analysis-setup
+status: final
 ---
 
 # Design Doc: Code Analysis & Formatting Setup

@@ -482,6 +482,7 @@ $RECYCLE.BIN/
 *.swp
 
 .worktrees
+.workspaces
 
 # >>> Comet managed project state >>>
 !/.comet/
