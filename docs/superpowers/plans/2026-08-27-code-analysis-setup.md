@@ -306,7 +306,7 @@ git commit -m "chore: enable warnings-as-errors and remediate analyzer warnings"
 
 This implements tasks.md 2.3: deliberately introduce a trivial compiler warning and show `dotnet build` fails, then remove it.
 
-- [ ] **Step 1: Introduce a deliberate warning**
+- [x] **Step 1: Introduce a deliberate warning**
 
 Add an unused local at the top of `Program.cs` (after `var builder = WebApplication.CreateBuilder(args);`):
 
@@ -316,7 +316,7 @@ int _deliberateUnusedLocal = 0;
 
 This produces compiler warning CS0219 ("The variable ... assigned but never used"). Under `TreatWarningsAsErrors=true` it becomes an error.
 
-- [ ] **Step 2: Confirm the build fails**
+- [x] **Step 2: Confirm the build fails**
 
 Run:
 ```bash
@@ -324,11 +324,11 @@ dotnet build TicketBooking.slnx
 ```
 Expected: `Build FAILED.` with the message `CS0219` reported as an **error** (e.g. `error CS0219`), and a non-zero exit code. This proves warnings-as-errors is active.
 
-- [ ] **Step 3: Remove the deliberate warning**
+- [x] **Step 3: Remove the deliberate warning**
 
 Delete the `int _deliberateUnusedLocal = 0;` line added in Step 1 so `Program.cs` returns to its Task 2 state.
 
-- [ ] **Step 4: Confirm the build is green again**
+- [x] **Step 4: Confirm the build is green again**
 
 Run:
 ```bash
@@ -336,7 +336,7 @@ dotnet build TicketBooking.slnx
 ```
 Expected: `Build succeeded.` with `0 Warning(s)`, `0 Error(s)`, exit code 0.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/Backend/TicketBooking.Api/Program.cs
