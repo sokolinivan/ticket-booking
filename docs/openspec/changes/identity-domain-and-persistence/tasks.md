@@ -5,7 +5,7 @@
 
 ## 2. Domain Model
 
-- [ ] 2.1 Implement strongly typed identifiers and the `SystemUser` aggregate with required profile, lifecycle, login-tracking, audit, and concurrency state; verify focused unit tests cover construction and invalid input.
+- [x] 2.1 Implement strongly typed identifiers and the `SystemUser` aggregate with required profile, lifecycle, login-tracking, audit, and concurrency state; verify focused unit tests cover construction and invalid input.
 - [ ] 2.2 Implement `Role`, `Permission`, `SystemUserRole`, and `RolePermission` models with stable codes and assignment metadata; verify unit tests cover valid creation and duplicate-assignment invariants.
 - [ ] 2.3 Implement lifecycle behavior that archives users without physical deletion, and verify unit tests demonstrate retained identity and valid status transitions.
 

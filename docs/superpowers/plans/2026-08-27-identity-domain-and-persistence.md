@@ -176,7 +176,7 @@ git commit -m "feat(identity): add module boundary"
 - Consumes: no EF Core API; domain construction accepts already-normalized login and an already-produced password hash.
 - Produces: `readonly record struct SystemUserId(Guid Value)`, `RoleId(Guid Value)`, `PermissionId(Guid Value)` with `New()` factories; `SystemUserStatus`; and `SystemUser.Create(...)` with immutable identity/audit creation state and internal EF-compatible constructors/setters.
 
-- [ ] **Step 1: Reference Identity Core and write failing ID tests**
+- [x] **Step 1: Reference Identity Core and write failing ID tests**
 
 Reference Identity Core from UnitTests. Test that `New()` yields non-empty IDs, the three ID types cannot be confused by their API, and equal backing values compare equal within one type:
 
@@ -193,7 +193,7 @@ public async Task New_CalledTwice_ReturnsDistinctNonEmptyValues()
 
 Run `dotnet run --project tests/TicketBooking.UnitTests -- --treenode-filter "/*/*/StronglyTypedIdTests/*" --minimum-expected-tests 1` and expect compilation failure because the ID types do not exist.
 
-- [ ] **Step 2: Implement the three minimal ID types and rerun the focused test**
+- [x] **Step 2: Implement the three minimal ID types and rerun the focused test**
 
 Use the same exact shape for each entity-specific type:
 
@@ -206,7 +206,7 @@ public readonly record struct SystemUserId(Guid Value)
 
 Run the same focused command and expect PASS.
 
-- [ ] **Step 3: Write failing SystemUser construction and validation tests**
+- [x] **Step 3: Write failing SystemUser construction and validation tests**
 
 Define a test factory using fixed UTC timestamps and assert every required field is retained: `Id`, `Login`, `NormalizedLogin`, `PasswordHash`, `FirstName`, `LastName`, `Email`, `PhoneNumber`, `Status`, `LastLoginAt`, `FailedLoginAttempts`, `CreatedAt`, `CreatedBy`, nullable `UpdatedAt`/`UpdatedBy`, and `Version`. Add parameterized tests that reject empty/whitespace login, normalized login, password hash, first name, last name, email, and creator; reject empty IDs; reject negative failed-attempt counts; and verify new users are `Active`, have no last login/update metadata, zero failed attempts, and version `1`.
 
@@ -228,11 +228,11 @@ public async Task Create_ValidRequiredValues_CreatesActiveVersionOneUser()
 
 Run the SystemUser class filter and expect compilation failure.
 
-- [ ] **Step 4: Implement the minimal aggregate construction contract**
+- [x] **Step 4: Implement the minimal aggregate construction contract**
 
 Add `SystemUserStatus` with exactly the four stable members. Implement `SystemUser.Create` and a private parameterless constructor for EF. Keep collection navigation and lifecycle mutation for later tasks. Centralize required-string guards in a private method inside `SystemUser`; do not create a BuildingBlocks abstraction. Never accept or expose plaintext password state.
 
-- [ ] **Step 5: Run all focused domain tests green**
+- [x] **Step 5: Run all focused domain tests green**
 
 ```bash
 dotnet build tests/TicketBooking.UnitTests/TicketBooking.UnitTests.csproj
@@ -242,7 +242,7 @@ dotnet run --project tests/TicketBooking.UnitTests --no-build -- --treenode-filt
 
 Expected: all construction and invalid-input cases pass.
 
-- [ ] **Step 6: Commit the core user model**
+- [x] **Step 6: Commit the core user model**
 
 ```bash
 git add src/Backend/Modules/TicketBooking.Identity.Core/Domain tests/TicketBooking.UnitTests
