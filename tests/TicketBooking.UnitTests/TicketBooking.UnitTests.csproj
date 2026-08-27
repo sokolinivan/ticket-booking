@@ -8,4 +8,8 @@
         <PackageReference Include="TUnit"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="../../src/Backend/Modules/TicketBooking.Identity.Core/TicketBooking.Identity.Core.csproj" />
+    </ItemGroup>
+
 </Project>
