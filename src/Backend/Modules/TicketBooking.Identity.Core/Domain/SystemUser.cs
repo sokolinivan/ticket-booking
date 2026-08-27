@@ -88,6 +88,43 @@ public sealed class SystemUser
         return assignment;
     }
 
+    public void Block(DateTimeOffset changedAt, string changedBy) =>
+        TransitionTo(SystemUserStatus.Blocked, changedAt, changedBy);
+
+    public void Disable(DateTimeOffset changedAt, string changedBy) =>
+        TransitionTo(SystemUserStatus.Disabled, changedAt, changedBy);
+
+    public void Activate(DateTimeOffset changedAt, string changedBy) =>
+        TransitionTo(SystemUserStatus.Active, changedAt, changedBy);
+
+    public void Archive(DateTimeOffset changedAt, string changedBy) =>
+        TransitionTo(SystemUserStatus.Archived, changedAt, changedBy);
+
+    private void TransitionTo(SystemUserStatus target, DateTimeOffset changedAt, string changedBy)
+    {
+        if (Status == SystemUserStatus.Archived)
+        {
+            throw new InvalidOperationException("An archived system user cannot change status.");
+        }
+
+        var allowed = target == SystemUserStatus.Archived
+            || Status == SystemUserStatus.Active && target is SystemUserStatus.Blocked or SystemUserStatus.Disabled
+            || Status == SystemUserStatus.Blocked && target is SystemUserStatus.Active or SystemUserStatus.Disabled
+            || Status == SystemUserStatus.Disabled && target == SystemUserStatus.Active;
+
+        if (!allowed)
+        {
+            throw new InvalidOperationException($"Cannot transition system user from {Status} to {target}.");
+        }
+
+        ArgumentOutOfRangeException.ThrowIfEqual(changedAt, default, nameof(changedAt));
+        var actor = Required(changedBy, nameof(changedBy));
+
+        Status = target;
+        UpdatedAt = changedAt;
+        UpdatedBy = actor;
+    }
+
     private static string Required(string value, string parameterName) =>
         string.IsNullOrWhiteSpace(value)
             ? throw new ArgumentException("Value cannot be empty or whitespace.", parameterName)
