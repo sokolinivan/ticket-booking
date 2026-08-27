@@ -264,7 +264,7 @@ git commit -m "feat(identity): add system user domain model"
 - Consumes: typed IDs and `SystemUser` from Task 2.
 - Produces: `Role.Create(RoleId id, string code, string name)`, `Permission.Create(PermissionId id, string code, string name)`, `SystemUser.AssignRole(Role role, DateTimeOffset assignedAt, string assignedBy)`, and `Role.AddPermission(Permission permission)`. The first produces `SystemUserRole` assignment metadata; both methods reject duplicate IDs before persistence.
 
-- [ ] **Step 1: Write failing entity tests**
+- [x] **Step 1: Write failing entity tests**
 
 Test valid code/name retention and rejection of empty ID, code, or name for Role and Permission. Codes are supplied as stable values; do not invent normalization policy in this change.
 
@@ -279,11 +279,11 @@ public async Task Create_ValidRole_RetainsStableCode()
 
 Run the class filter and expect compilation failure.
 
-- [ ] **Step 2: Implement Role and Permission minimally and rerun green**
+- [x] **Step 2: Implement Role and Permission minimally and rerun green**
 
 Give each an EF-compatible private constructor, read-only public properties, and private mutable assignment collections exposed as `IReadOnlyCollection<T>`. Initialize `Version = 1` for these independently mutable records so the global mutable-row concurrency rule can be mapped consistently.
 
-- [ ] **Step 3: Write failing assignment invariant tests**
+- [x] **Step 3: Write failing assignment invariant tests**
 
 Test multiple distinct roles per user, assignment timestamp/actor retention, duplicate role rejection, multiple distinct permissions per role, duplicate permission rejection, and required assignment actor. Assert duplicate methods throw `InvalidOperationException` before another join object is added.
 
@@ -294,11 +294,11 @@ await Assert.That(duplicate).Throws<InvalidOperationException>();
 await Assert.That(user.Roles).Count().IsEqualTo(1);
 ```
 
-- [ ] **Step 4: Implement explicit joins and aggregate methods**
+- [x] **Step 4: Implement explicit joins and aggregate methods**
 
 `SystemUserRole` stores `SystemUserId`, `RoleId`, `AssignedAt`, and `AssignedBy`, plus navigations. `RolePermission` stores `RoleId` and `PermissionId`, plus navigations; no assignment metadata is added because neither task nor spec requires it. Check duplicate IDs against the backing collections before constructing a join.
 
-- [ ] **Step 5: Run all role/permission/assignment tests green**
+- [x] **Step 5: Run all role/permission/assignment tests green**
 
 ```bash
 dotnet build tests/TicketBooking.UnitTests/TicketBooking.UnitTests.csproj
@@ -306,7 +306,7 @@ dotnet run --project tests/TicketBooking.UnitTests --no-build -- --treenode-filt
 dotnet run --project tests/TicketBooking.UnitTests --no-build -- --treenode-filter "/*/*/AssignmentTests/*" --minimum-expected-tests 1
 ```
 
-- [ ] **Step 6: Commit independent records and joins**
+- [x] **Step 6: Commit independent records and joins**
 
 ```bash
 git add src/Backend/Modules/TicketBooking.Identity.Core/Domain tests/TicketBooking.UnitTests/Identity
