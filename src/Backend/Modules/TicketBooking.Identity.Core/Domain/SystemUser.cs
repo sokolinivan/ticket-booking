@@ -3,6 +3,7 @@ namespace TicketBooking.Identity.Domain;
 public sealed class SystemUser
 {
     private int _failedLoginAttempts;
+    private readonly List<SystemUserRole> _roles = [];
 
     private SystemUser()
     {
@@ -32,6 +33,7 @@ public sealed class SystemUser
     public DateTimeOffset? UpdatedAt { get; internal set; }
     public string? UpdatedBy { get; internal set; }
     public long Version { get; internal set; }
+    public IReadOnlyCollection<SystemUserRole> Roles => _roles;
 
     public static SystemUser Create(
         SystemUserId id,
@@ -65,6 +67,25 @@ public sealed class SystemUser
             CreatedBy = Required(createdBy, nameof(createdBy)),
             Version = 1,
         };
+    }
+
+    public SystemUserRole AssignRole(Role role, DateTimeOffset assignedAt, string assignedBy)
+    {
+        ArgumentNullException.ThrowIfNull(role);
+
+        if (_roles.Any(assignment => assignment.RoleId == role.Id))
+        {
+            throw new InvalidOperationException("The role is already assigned to this system user.");
+        }
+
+        if (string.IsNullOrWhiteSpace(assignedBy))
+        {
+            throw new ArgumentException("Value cannot be empty or whitespace.", nameof(assignedBy));
+        }
+
+        var assignment = SystemUserRole.Create(this, role, assignedAt, assignedBy);
+        _roles.Add(assignment);
+        return assignment;
     }
 
     private static string Required(string value, string parameterName) =>
