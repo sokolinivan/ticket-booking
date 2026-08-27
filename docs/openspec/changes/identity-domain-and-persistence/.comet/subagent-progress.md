@@ -1,17 +1,17 @@
 # Subagent Progress
 
-- Plan task: Task 6: Configure Entity Mapping And Concurrency Metadata (task 3.2)
-- OpenSpec task: 3.2 Add EF Core configurations for the `identity` schema, strongly typed IDs, required fields, lengths, relationships, and `Version bigint` concurrency; verify model metadata tests assert the mappings.
+- Plan task: Task 7: Add Stable Constraints And Required Indexes (task 3.3)
+- OpenSpec task: 3.3 Add unique and lookup indexes for normalized login, email, status, role code, permission code, and assignment pairs; verify model metadata tests assert every required index and uniqueness setting.
 - Stage: done
 - Model: standard
 - Review mode: thorough
 - TDD mode: tdd
-- Implementation commit: 62575dd
-- Changed files: five entity configurations, typed-ID converters/comparers, IdentityModelMetadataTests
-- RED evidence: metadata assertions failed before explicit mappings
-- GREEN evidence: build zero warnings/errors; metadata 2/2; full tests 82/82
-- Review passed: spec PASS; quality APPROVED with deferred minor test gaps
+- Implementation commit: e534a5b
+- Changed files: IdentityConstraintNames, five configurations, IdentityModelMetadataTests
+- RED evidence: metadata tests failed on missing normalized-login index
+- GREEN evidence: metadata 3/3; solution build zero warnings/errors
+- Review passed: spec PASS; quality APPROVED
 - Review-fix round: 0/2
-- Risk signals: SQL/schema mapping; diff >200 lines
-- Unresolved feedback: minor test gaps deferred to final review (status conversion assertion, complete FK set, ValueGenerated.Never assertion)
+- Risk signals: SQL/schema constraint names
+- Unresolved feedback: none
 - Unresolved feedback: none

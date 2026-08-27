@@ -474,26 +474,26 @@ git commit -m "feat(identity): map identity persistence model"
 - Consumes: entity configurations from Task 6.
 - Produces: stable constants and database names `UX_SystemUsers_NormalizedLogin`, `IX_SystemUsers_Email`, `IX_SystemUsers_Status`, `UX_Roles_Code`, `UX_Permissions_Code`, `UX_SystemUserRoles_SystemUserId_RoleId`, and `UX_RolePermissions_RoleId_PermissionId`; stable PK/FK names used by migration assertions.
 
-- [ ] **Step 1: Add failing index metadata assertions**
+- [x] **Step 1: Add failing index metadata assertions**
 
 For each expected property sequence, assert index name and uniqueness. Ensure Email and Status are non-unique and every named `UX_` index is unique. Assert no extra uniqueness requirement on unnormalized Login or Email.
 
-- [ ] **Step 2: Run the metadata class red**
+- [x] **Step 2: Run the metadata class red**
 
 Run the Task 6 class filter; expect missing-index failures.
 
-- [ ] **Step 3: Add stable constraint constants and mapping calls**
+- [x] **Step 3: Add stable constraint constants and mapping calls**
 
 Reference constants from `HasDatabaseName(...)`; use the same constants later for exception translation. Name PKs and internal FKs explicitly with `PK_*` and `FK_*` constants. Composite join PKs enforce the pair invariant; retain the explicitly named unique pair indexes required by tasks/spec even if PostgreSQL also gets uniqueness from the PK.
 
-- [ ] **Step 4: Run metadata tests green**
+- [x] **Step 4: Run metadata tests green**
 
 ```bash
 dotnet build tests/TicketBooking.IntegrationTests/TicketBooking.IntegrationTests.csproj
 dotnet run --project tests/TicketBooking.IntegrationTests --no-build -- --treenode-filter "/*/*/IdentityModelMetadataTests/*" --minimum-expected-tests 1
 ```
 
-- [ ] **Step 5: Commit stable relational names**
+- [x] **Step 5: Commit stable relational names**
 
 ```bash
 git add src/Backend/Modules/TicketBooking.Identity.Core/Internal/Persistence tests/TicketBooking.IntegrationTests/Identity/IdentityModelMetadataTests.cs
