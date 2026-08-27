@@ -424,17 +424,17 @@ git commit -m "feat(identity): register identity database context"
 - Consumes: context and domain types from Tasks 2-5.
 - Produces: explicit table/schema/key/column/FK/delete behavior/converter/comparer/string-length/status/version metadata for all five tables.
 
-- [ ] **Step 1: Write failing model metadata tests for ownership and scalar mappings**
+- [x] **Step 1: Write failing model metadata tests for ownership and scalar mappings**
 
 Instantiate the context with Npgsql options and inspect `context.Model`. Assert exact tables in schema `identity`; typed IDs map to `uuid` and have converters/comparers; required fields are non-null; statuses convert to strings; and lengths are explicit: login/normalized login `256`, password hash `1024`, first/last name `200`, email `320`, phone `64`, actor/code/name fields `200`/`128`/`256` as applicable. Assert no plaintext-password property exists.
 
-- [ ] **Step 2: Add failing relationship and concurrency metadata assertions**
+- [x] **Step 2: Add failing relationship and concurrency metadata assertions**
 
 Assert Identity-only FKs, composite join primary keys `(SystemUserId, RoleId)` and `(RoleId, PermissionId)`, `DeleteBehavior.Restrict`, no cross-module principal entity, and `Version` mapped as required PostgreSQL `bigint`, concurrency token, non-generated value with default `1`.
 
 Run the class filter and expect failures because conventions do not satisfy explicit mappings.
 
-- [ ] **Step 3: Implement converters/comparers and focused configurations**
+- [x] **Step 3: Implement converters/comparers and focused configurations**
 
 Use one converter and comparer pair per ID type, for example:
 
@@ -449,14 +449,14 @@ internal sealed class SystemUserIdComparer()
 
 Configure every column, constraint, FK, navigation backing field, and delete behavior explicitly. Use `HasConversion<string>()` for status and `IsConcurrencyToken()` for version. Do not add indexes yet; Task 7 owns index behavior.
 
-- [ ] **Step 4: Run metadata tests green**
+- [x] **Step 4: Run mapping metadata tests green**
 
 ```bash
 dotnet build tests/TicketBooking.IntegrationTests/TicketBooking.IntegrationTests.csproj
 dotnet run --project tests/TicketBooking.IntegrationTests --no-build -- --treenode-filter "/*/*/IdentityModelMetadataTests/*" --minimum-expected-tests 1
 ```
 
-- [ ] **Step 5: Commit explicit mappings**
+- [x] **Step 5: Commit explicit mappings**
 
 ```bash
 git add src/Backend/Modules/TicketBooking.Identity.Core/Internal/Persistence/Configurations tests/TicketBooking.IntegrationTests/Identity/IdentityModelMetadataTests.cs

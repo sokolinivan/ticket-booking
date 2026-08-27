@@ -12,7 +12,7 @@
 ## 3. EF Core Persistence
 
 - [x] 3.1 Add `IdentityDbContext` and module registration against the shared PostgreSQL connection, and verify a composition test builds the API service provider and creates the context.
-- [ ] 3.2 Add EF Core configurations for the `identity` schema, strongly typed IDs, required fields, lengths, relationships, and `Version bigint` concurrency; verify model metadata tests assert the mappings.
+- [x] 3.2 Add EF Core configurations for the `identity` schema, strongly typed IDs, required fields, lengths, relationships, and `Version bigint` concurrency; verify model metadata tests assert the mappings.
 - [ ] 3.3 Add unique and lookup indexes for normalized login, email, status, role code, permission code, and assignment pairs; verify model metadata tests assert every required index and uniqueness setting.
 
 ## 4. Migration And Relational Verification
