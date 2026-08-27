@@ -74,6 +74,25 @@ public class IdentityModelMetadataTests
         await AssertVersion<Permission>(model);
     }
 
+    [Test]
+    public async Task Model_MapsRequiredIndexesExplicitly()
+    {
+        await using var context = CreateContext();
+        var model = context.Model;
+
+        await AssertIndex<SystemUser>(model, "UX_SystemUsers_NormalizedLogin", true, nameof(SystemUser.NormalizedLogin));
+        await AssertIndex<SystemUser>(model, "IX_SystemUsers_Email", false, nameof(SystemUser.Email));
+        await AssertIndex<SystemUser>(model, "IX_SystemUsers_Status", false, nameof(SystemUser.Status));
+        await AssertIndex<Role>(model, "UX_Roles_Code", true, nameof(Role.Code));
+        await AssertIndex<Permission>(model, "UX_Permissions_Code", true, nameof(Permission.Code));
+        await AssertIndex<SystemUserRole>(model, "UX_SystemUserRoles_SystemUserId_RoleId", true, nameof(SystemUserRole.SystemUserId), nameof(SystemUserRole.RoleId));
+        await AssertIndex<RolePermission>(model, "UX_RolePermissions_RoleId_PermissionId", true, nameof(RolePermission.RoleId), nameof(RolePermission.PermissionId));
+
+        var userIndexes = model.FindEntityType(typeof(SystemUser))!.GetIndexes();
+        await Assert.That(userIndexes.Any(index => index.IsUnique && index.Properties.Any(property => property.Name == nameof(SystemUser.Login)))).IsFalse();
+        await Assert.That(userIndexes.Any(index => index.IsUnique && index.Properties.Any(property => property.Name == nameof(SystemUser.Email)))).IsFalse();
+    }
+
     private static IdentityDbContext CreateContext()
     {
         var options = new DbContextOptionsBuilder<IdentityDbContext>()
@@ -131,6 +150,14 @@ public class IdentityModelMetadataTests
             .Single(candidate => candidate.Properties.Select(property => property.Name).SequenceEqual([propertyName]));
         await Assert.That(foreignKey.PrincipalEntityType.ClrType).IsEqualTo(typeof(TPrincipal));
         await Assert.That(foreignKey.DeleteBehavior).IsEqualTo(DeleteBehavior.Restrict);
+    }
+
+    private static async Task AssertIndex<TEntity>(IModel model, string name, bool unique, params string[] properties)
+    {
+        var index = model.FindEntityType(typeof(TEntity))!.GetIndexes()
+            .Single(candidate => candidate.Properties.Select(property => property.Name).SequenceEqual(properties));
+        await Assert.That(index.GetDatabaseName()).IsEqualTo(name);
+        await Assert.That(index.IsUnique).IsEqualTo(unique);
     }
 
     private static async Task AssertVersion<TEntity>(IModel model)

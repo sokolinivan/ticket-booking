@@ -10,7 +10,7 @@ internal sealed class SystemUserConfiguration : IEntityTypeConfiguration<SystemU
     public void Configure(EntityTypeBuilder<SystemUser> builder)
     {
         builder.ToTable("SystemUsers", "identity");
-        builder.HasKey(user => user.Id);
+        builder.HasKey(user => user.Id).HasName(IdentityConstraintNames.SystemUsersPrimaryKey);
 
         builder.Property(user => user.Id)
             .HasConversion<SystemUserIdConverter, SystemUserIdComparer>()
@@ -39,9 +39,18 @@ internal sealed class SystemUserConfiguration : IEntityTypeConfiguration<SystemU
             .IsConcurrencyToken()
             .IsRequired();
 
+        builder.HasIndex(user => user.NormalizedLogin)
+            .IsUnique()
+            .HasDatabaseName(IdentityConstraintNames.SystemUsersNormalizedLoginUniqueIndex);
+        builder.HasIndex(user => user.Email)
+            .HasDatabaseName(IdentityConstraintNames.SystemUsersEmailIndex);
+        builder.HasIndex(user => user.Status)
+            .HasDatabaseName(IdentityConstraintNames.SystemUsersStatusIndex);
+
         builder.HasMany(user => user.Roles)
             .WithOne(assignment => assignment.SystemUser)
             .HasForeignKey(assignment => assignment.SystemUserId)
+            .HasConstraintName(IdentityConstraintNames.SystemUserRolesSystemUserForeignKey)
             .OnDelete(DeleteBehavior.Restrict);
         builder.Navigation(user => user.Roles).UsePropertyAccessMode(PropertyAccessMode.Field);
     }
