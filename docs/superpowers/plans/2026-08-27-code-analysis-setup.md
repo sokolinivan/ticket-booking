@@ -40,7 +40,7 @@ base-ref: 0d576b1d4edaf0986065f02811752d53a54862f1
 
 This task implements tasks.md 1.1, 1.2, and 1.3: a root file with general, C#, and frontend scoped sections. Frontend rules mirror Prettier/Vite defaults. C# rules use 4-space indent (matching the current source) and keep most rules at `suggestion`; only the small enforced core is `warning`/`error`. CA1707/CA1822 are relaxed for the whole `[tests/**/*.cs]` subtree in a section added later (Task 2), so leave room for that section here (it can be appended at the end).
 
-- [ ] **Step 1: Create the `.editorconfig`**
+- [x] **Step 1: Create the `.editorconfig`**
 
 Write the following to `/home/bean/Projects/work/ticket-booking/.editorconfig`:
 
@@ -141,7 +141,7 @@ end_of_line = lf
 
 > Note: multiple `[*.{ts,tsx,js,jsx}]` headers in one file are allowed and merged; this keeps the frontend rules visually grouped. Keep the file as produced.
 
-- [ ] **Step 2: Verify the file is well-formed and picked up by `dotnet format`**
+- [x] **Step 2: Verify the file is well-formed and picked up by `dotnet format`**
 
 Run:
 ```bash
@@ -149,7 +149,7 @@ dotnet format TicketBooking.slnx --verify-no-changes --include src/Backend/Ticke
 ```
 Expected: command exits 0 and reports no files need formatting, confirming the `.editorconfig` is honored and current C# files are already conforming (4-space indent, crlf, final newline). `TicketBooking.BuildingBlocks/Class1.cs` currently lacks a final newline — if it is flagged here, that is expected and is fixed in Task 2.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add .editorconfig

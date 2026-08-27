@@ -1,8 +1,8 @@
 ## 1. Unified formatting rules
 
-- [ ] 1.1 Create a repository-root `.editorconfig` with general, C#, and frontend (TypeScript/JavaScript) scoped sections and verify it is picked up by `dotnet format` (no C# files are listed as non-conforming)
-- [ ] 1.2 Define C# style rules (indentation, blank lines, naming, implicit/explicit types, `var` preference, accessibility modifiers, expression-body, `this.` qualifier, new-line, Unicode/UTF-8 header) consistent with the existing repo style and verify a sample file reformats without changes
-- [ ] 1.3 Define frontend TypeScript/JavaScript rules aligned with the existing Vite/React projects (2-space indent, quotes, trailing commas, semicolons) and verify they do not conflict with C# rules (path-scoped sections)
+- [x] 1.1 Create a repository-root `.editorconfig` with general, C#, and frontend (TypeScript/JavaScript) scoped sections and verify it is picked up by `dotnet format` (no C# files are listed as non-conforming)
+- [x] 1.2 Define C# style rules (indentation, blank lines, naming, implicit/explicit types, `var` preference, accessibility modifiers, expression-body, `this.` qualifier, new-line, Unicode/UTF-8 header) consistent with the existing repo style and verify a sample file reformats without changes
+- [x] 1.3 Define frontend TypeScript/JavaScript rules aligned with the existing Vite/React projects (2-space indent, quotes, trailing commas, semicolons) and verify they do not conflict with C# rules (path-scoped sections)
 
 ## 2. Warnings as errors
 
