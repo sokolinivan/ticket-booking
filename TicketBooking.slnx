@@ -1,0 +1,26 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Aspire/">
+    <Project Path="src/Aspire/TicketBooking.AppHost/TicketBooking.AppHost.csproj" />
+    <Project Path="src/Aspire/TicketBooking.ServiceDefaults/TicketBooking.ServiceDefaults.csproj" />
+  </Folder>
+  <Folder Name="/src/Backend/">
+    <Project Path="src/Backend/TicketBooking.Api/TicketBooking.Api.csproj" />
+    <Project Path="src/Backend/TicketBooking.BuildingBlocks/TicketBooking.BuildingBlocks.csproj" />
+  </Folder>
+  <Folder Name="/src/Backend/Modules/" />
+  <Folder Name="/src/Backend/Modules/Companies/">
+    <Project Path="src/Backend/Modules/TicketBooking.Companies.Contracts/TicketBooking.Companies.Contracts.csproj" />
+    <Project Path="src/Backend/Modules/TicketBooking.Companies.Core/TicketBooking.Companies.Core.csproj" />
+  </Folder>
+  <Folder Name="/src/Frontend/">
+    <Project Path="src/Frontend/backoffice-web/backoffice-web.esproj" />
+    <Project Path="src/Frontend/public-web/client-web.esproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TicketBooking.ArchitectureTests/TicketBooking.ArchitectureTests.csproj" />
+    <Project Path="tests/TicketBooking.IntegrationTests/TicketBooking.IntegrationTests.csproj" />
+    <Project Path="tests/TicketBooking.SystemTests/TicketBooking.SystemTests.csproj" />
+    <Project Path="tests/TicketBooking.UnitTests/TicketBooking.UnitTests.csproj" />
+  </Folder>
+</Solution>

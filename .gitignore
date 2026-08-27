@@ -488,3 +488,7 @@ $RECYCLE.BIN/
 /.comet/*
 !/.comet/config.yaml
 # <<< Comet managed project state <<<
+
+# JavaScript SDK esproj build artifacts (literal backslash in dir name)
+**/obj[\]Debug/
+**/obj[\]*/

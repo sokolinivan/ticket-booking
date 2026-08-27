@@ -15,30 +15,28 @@
 
 ## Задачи
 
-- [ ] Создать `TicketBooking.slnx`.
-- [ ] Создать базовую структуру каталогов `src/`, `tests/`, `deploy/`.
+- [x] Создать `TicketBooking.slnx`.
+- [x] Создать базовую структуру каталогов `src/`, `tests/`, `deploy/`.
 - [ ] Добавить проекты:
-  - [ ] `TicketBooking.AppHost`;
-  - [ ] `TicketBooking.ServiceDefaults`;
-  - [ ] `TicketBooking.Gateway`;
-  - [ ] `TicketBooking.Api`;
+  - [x] `TicketBooking.AppHost`;
+  - [x] `TicketBooking.ServiceDefaults`;
+  - [x] `TicketBooking.Api`;
   - [ ] `TicketBooking.Worker`;
   - [ ] `TicketBooking.DatabaseMigrator`;
-  - [ ] `TicketBooking.BuildingBlocks`;
-  - [ ] проекты бизнес-модулей.
+  - [x] `TicketBooking.BuildingBlocks`;
 - [ ] Создать frontend workspace на `pnpm`.
 - [ ] Создать React + TypeScript + Vite приложения:
-  - [ ] `src/Frontend/public-web`;
-  - [ ] `src/Frontend/admin-web`.
-- [ ] Создать тестовые проекты:
-  - [ ] `TicketBooking.UnitTests`;
-  - [ ] `TicketBooking.IntegrationTests`;
-  - [ ] `TicketBooking.ArchitectureTests`;
-  - [ ] `TicketBooking.SystemTests`.
-- [ ] Подключить TUnit и Microsoft Testing Platform.
+  - [x] `src/Frontend/public-web`;
+  - [x] `src/Frontend/backoffice-web`.
+- [x] Создать тестовые проекты:
+  - [x] `TicketBooking.UnitTests`;
+  - [x] `TicketBooking.IntegrationTests`;
+  - [x] `TicketBooking.ArchitectureTests`;
+  - [x] `TicketBooking.SystemTests`.
+- [x] Подключить TUnit и Microsoft Testing Platform.
 - [ ] Подключить Playwright для браузерных тестов.
 - [ ] Настроить единые правила форматирования `.editorconfig`.
-- [ ] Настроить nullable reference types и warnings as errors для backend-проектов.
+- [ ] Настроить nullable reference types и warnings as errors для backend-проектов. *(NRT включён, warnings as errors не настроены)*
 - [ ] Зафиксировать правила зависимостей между модулями.
 - [ ] Добавить architecture tests, запрещающие недопустимые project/namespace dependencies.
 - [ ] Добавить базовый GitHub Actions workflow для build и test.
