@@ -2,6 +2,7 @@
 change: code-analysis-setup
 design-doc: docs/superpowers/specs/2026-08-27-code-analysis-setup-design.md
 base-ref: 0d576b1d4edaf0986065f02811752d53a54862f1
+archived-with: 2026-08-27-code-analysis-setup
 ---
 
 # Code Analysis & Formatting Setup Implementation Plan
