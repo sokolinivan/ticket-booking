@@ -62,7 +62,7 @@ indent_size = 4
 tab_width = 4
 insert_final_newline = true
 charset = utf-8
-end_of_line = crlf
+end_of_line = lf
 
 # File layout / usings
 dotnet_sort_system_directives_first = true
@@ -147,7 +147,9 @@ Run:
 ```bash
 dotnet format TicketBooking.slnx --verify-no-changes --include src/Backend/TicketBooking.Api src/Backend/TicketBooking.BuildingBlocks
 ```
-Expected: command exits 0 and reports no files need formatting, confirming the `.editorconfig` is honored and current C# files are already conforming (4-space indent, crlf, final newline). `TicketBooking.BuildingBlocks/Class1.cs` currently lacks a final newline — if it is flagged here, that is expected and is fixed in Task 2.
+Expected: command exits 0 and reports no files need formatting, confirming the `.editorconfig` is honored and current C# files are already conforming (4-space indent, final newline). `TicketBooking.BuildingBlocks/Class1.cs` currently lacks a final newline — if it is flagged here, that is expected and is fixed in Task 2.
+
+> **Ruling (user):** `[*.cs]` uses `end_of_line = lf` (not crlf) so the repo stores LF without a `.gitattributes`, avoiding cross-platform churn. Task 4 re-ran `dotnet format` to revert the initial CRLF conversion.
 
 - [x] **Step 3: Commit**
 
