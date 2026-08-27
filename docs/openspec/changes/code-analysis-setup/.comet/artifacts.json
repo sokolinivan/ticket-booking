@@ -1,0 +1,7 @@
+{
+  "openspec_proposal": "docs/openspec/changes/code-analysis-setup/proposal.md",
+  "openspec_design": "docs/openspec/changes/code-analysis-setup/design.md",
+  "openspec_tasks": "docs/openspec/changes/code-analysis-setup/tasks.md",
+  "handoff_context": "docs/openspec/changes/code-analysis-setup/.comet/handoff/spec-context.json",
+  "handoff_markdown": "docs/openspec/changes/code-analysis-setup/.comet/handoff/spec-context.md"
+}

@@ -1,0 +1,25 @@
+{
+  "change": "code-analysis-setup",
+  "phase": "design",
+  "mode": "beta",
+  "canonical_spec": "openspec",
+  "generated_by": "comet-handoff.sh",
+  "context_hash": "928b5a578f0ff412caf02fcdf2a352b6a9e05833018f5ff590e949813c52ca85",
+  "files": [
+    {
+      "path": "docs/openspec/changes/code-analysis-setup/proposal.md",
+      "sha256": "69a8736ca90a73bf0fbdb40c4c671df1322434679d8e9cfa5e5f67d23a34a016",
+      "role": "supporting"
+    },
+    {
+      "path": "docs/openspec/changes/code-analysis-setup/design.md",
+      "sha256": "b1368ca42abd37d48f833117d4f60775a3072fee2f10295103eb91e0f7785c6b",
+      "role": "supporting"
+    },
+    {
+      "path": "docs/openspec/changes/code-analysis-setup/tasks.md",
+      "sha256": "8cf65faf2fd655f163e07b8810e71b99a5cc7c428ab91e65fb488f78a5fe7afb",
+      "role": "supporting"
+    }
+  ]
+}
