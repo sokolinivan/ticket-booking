@@ -359,7 +359,7 @@ git commit -m "test: prove warnings-as-errors breaks the build on a deliberate w
 
 This implements tasks.md 3.1.
 
-- [ ] **Step 1: Run the format verification across the solution**
+- [x] **Step 1: Run the format verification across the solution**
 
 Run:
 ```bash
@@ -367,11 +367,11 @@ dotnet format TicketBooking.slnx --verify-no-changes
 ```
 Expected: exits 0 and reports `Format` complete with no files needing changes (`dotnet format` exits non-zero if any file would be reformatted).
 
-- [ ] **Step 2: If the verify fails, apply formatting, then re-verify**
+- [x] **Step 2: If the verify fails, apply formatting, then re-verify**
 
 Only if Step 1 reports files to change: run `dotnet format TicketBooking.slnx`, review the `git diff` to confirm the changes are formatting-only, commit if the output is accepted, then re-run Step 1 until it returns exit 0.
 
-- [ ] **Step 3: Commit any formatting fixups**
+- [x] **Step 3: Commit any formatting fixups**
 
 If Step 2 produced changes:
 ```bash
