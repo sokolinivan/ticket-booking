@@ -13,4 +13,4 @@
 ## 3. Verification
 
 - [x] 3.1 Run `dotnet format --verify-no-changes` across the solution and verify it reports no changes needed
-- [ ] 3.2 Rebuild the full solution cleanly with warnings-as-errors active and verify exit code 0 with zero warnings
+- [x] 3.2 Rebuild the full solution cleanly with warnings-as-errors active and verify exit code 0 with zero warnings

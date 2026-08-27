@@ -390,7 +390,7 @@ If Step 1 already passed, there is nothing to commit in this task.
 **Interfaces:**
 - Consumes: All prior tasks. Produces: the end-state evidence required by tasks.md 3.2 and the design's testing strategy (Design 3).
 
-- [ ] **Step 1: Clean and rebuild the full solution**
+- [x] **Step 1: Clean and rebuild the full solution**
 
 Run:
 ```bash
@@ -398,11 +398,11 @@ dotnet build TicketBooking.slnx -t:Rebuild
 ```
 Expected: `Build succeeded.` with `0 Warning(s)`, `0 Error(s)`, exit code 0. This recompiles from scratch so no incremental-cache artifact masks stale warnings.
 
-- [ ] **Step 2: Confirm the analyzer breadth did not cause unexpected failures**
+- [x] **Step 2: Confirm the analyzer breadth did not cause unexpected failures**
 
 Review the build output: no unexpected `error`/`warning` lines; only the enabled `Recommended`-mode rule set is active with no new severities forcing suppressible churn (Design 3 row "Analyzer breadth sane").
 
-- [ ] **Step 3: Final commit (only if the clean rebuild produced any source change)**
+- [x] **Step 3: Final commit (only if the clean rebuild produced any source change)**
 
 If Step 1's rebuild surfaced no changes (expected), there is nothing to commit. If the rebuild revealed any remaining warning requiring a fix, apply it as in Task 2 Step 3 (fix in source, or relax severity in `.editorconfig` per Design 2.3), re-run Step 1, then:
 ```bash
