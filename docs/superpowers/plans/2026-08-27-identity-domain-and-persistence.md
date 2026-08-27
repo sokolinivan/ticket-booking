@@ -323,7 +323,7 @@ git commit -m "feat(identity): add roles permissions and assignments"
 - Consumes: `SystemUserStatus` and aggregate state from Task 2.
 - Produces: `Block(DateTimeOffset changedAt, string changedBy)`, `Disable(...)`, `Activate(...)`, and `Archive(...)`; archive is terminal, updates audit metadata, and never removes identity state.
 
-- [ ] **Step 1: Write the lifecycle transition matrix as failing tests**
+- [x] **Step 1: Write the lifecycle transition matrix as failing tests**
 
 Use method data to cover `Active -> Blocked`, `Active -> Disabled`, `Blocked -> Active`, `Blocked -> Disabled`, `Disabled -> Active`, any non-archived state to `Archived`, and rejection of every transition out of `Archived`. Also assert transitions preserve `Id`, login, password hash, and role assignments and update `UpdatedAt`/`UpdatedBy`.
 
@@ -339,15 +339,15 @@ public async Task Archive_ActiveUser_RetainsIdentityAndMarksArchived()
 }
 ```
 
-- [ ] **Step 2: Run the focused lifecycle tests red**
+- [x] **Step 2: Run the focused lifecycle tests red**
 
 Run `dotnet run --project tests/TicketBooking.UnitTests -- --treenode-filter "/*/*/SystemUserLifecycleTests/*" --minimum-expected-tests 1`; expect compile failures for missing methods.
 
-- [ ] **Step 3: Implement only the tested transition rules**
+- [x] **Step 3: Implement only the tested transition rules**
 
 Use one private transition method that rejects archived source state, validates actor/time inputs, changes only status and audit update fields, and contains no delete method or `IsDeleted` flag. Make repeated transition to the current non-archived status an invalid transition rather than silently hiding caller mistakes.
 
-- [ ] **Step 4: Run the complete Identity unit suite**
+- [x] **Step 4: Run the complete Identity unit suite**
 
 ```bash
 dotnet build tests/TicketBooking.UnitTests/TicketBooking.UnitTests.csproj
@@ -356,7 +356,7 @@ dotnet run --project tests/TicketBooking.UnitTests --no-build -- --treenode-filt
 
 Expected: all Identity domain tests pass.
 
-- [ ] **Step 5: Commit lifecycle behavior**
+- [x] **Step 5: Commit lifecycle behavior**
 
 ```bash
 git add src/Backend/Modules/TicketBooking.Identity.Core/Domain/SystemUser.cs tests/TicketBooking.UnitTests/Identity/SystemUserLifecycleTests.cs
