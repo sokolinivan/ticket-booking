@@ -1,0 +1,243 @@
+schema: comet.native.v4
+name: architecture-dependency-tests
+language: en
+phase: build
+status: active
+state_version: 2
+brief: brief.md
+spec_changes:
+  - capability: architecture-tests
+    operation: create
+    source: specs/architecture-tests/spec.md
+workspace:
+  isolation: current
+  change_branch: commands/comet_custom_command
+  target_branch: commands/comet_custom_command
+  finish: null
+loop:
+  stage: building
+  goal_cycle: 1
+  iteration: 1
+  attempt: 0
+  retry_epoch: 0
+  failed_iteration_count: 0
+  no_progress_count: 0
+  execution_failure_count: 0
+  previous_unresolved_ids: []
+  next_action: submit-builder-candidate
+acceptance:
+  - id: A1
+    source: brief.md
+    text: "**A1.** Правила зависимостей модулей зафиксированы как исполняемые
+      архитектурные тесты (ArchUnitNET), а не только документация."
+    result: pending
+    reason: null
+  - id: A2
+    source: brief.md
+    text: "**A2.** Изоляция модулей: тип из внутреннего слоя модуля A не может
+      зависеть от внутреннего слоя/модели модуля B; единственный разрешённый
+      межмодульный видимый тип — публичный `Contracts` другого модуля."
+    result: pending
+    reason: null
+  - id: A3
+    source: brief.md
+    text: "**A3.** Чистота домена: бизнес-модули не зависят от ASP.NET Core, Aspire,
+      YARP, PaymentEmulator и frontend/React."
+    result: pending
+    reason: null
+  - id: A4
+    source: brief.md
+    text: "**A4.** Direction composition roots: бизнес-модули не зависят от
+      `TicketBooking.Api`, `TicketBooking.Worker`,
+      `TicketBooking.DatabaseMigrator`, `TicketBooking.Gateway`."
+    result: pending
+    reason: null
+  - id: A5
+    source: brief.md
+    text: "**A5.** Набор тестов собирается и зелёный на текущем состоянии
+      репозитория (`dotnet test` ArchitectureTests), правила сформулированы
+      через namespace-префиксы и автоматически применяются к новым модулям."
+    result: pending
+    reason: null
+  - id: A6
+    source: specs/architecture-tests/spec.md
+    text: Исполняемый набор архитектурных тестов в проекте
+      `TicketBooking.ArchitectureTests`, проверяющий недопустимые
+      project/namespace dependencies модульного монолита TicketBooking на основе
+      namespace-префиксов.
+    result: pending
+    reason: null
+  - id: A7
+    source: specs/architecture-tests/spec.md
+    text: "Автоматически защищать границы модульного монолита: изоляцию
+      бизнес-модулей, направление слоёв, чистоту домена и направление
+      dependencies composition roots, без трудоёмкого перечисления конкретных
+      типов."
+    result: pending
+    reason: null
+  - id: A8
+    source: specs/architecture-tests/spec.md
+    text: Загружаются backend-сборки корня `TicketBooking.*` (Api, Business-модули,
+      BuildingBlocks, ServiceDefaults, AppHost, далее —
+      Gateway/Worker/DatabaseMigrator по мере появления).
+    result: pending
+    reason: null
+  - id: A9
+    source: specs/architecture-tests/spec.md
+    text: "Регистр бизнес-модулей вычисляется динамически из загруженных namespace:
+      namespace вида `TicketBooking.<Module>.<Layer>`, где `Module` не входит в
+      состав служебных проектов (`Api`, `Worker`, `DatabaseMigrator`, `Gateway`,
+      `ServiceDefaults`, `BuildingBlocks`, `AppHost`)."
+    result: pending
+    reason: null
+  - id: A10
+    source: specs/architecture-tests/spec.md
+    text: Слой `Contracts` — публичные application interfaces модуля (единственный
+      разрешённый межмодульный видимый слой).
+    result: pending
+    reason: null
+  - id: A11
+    source: specs/architecture-tests/spec.md
+    text: Внутренние слои модуля — всё, что не `Contracts` (`Core`, далее `Domain`,
+      `Application`, `Infrastructure`).
+    result: pending
+    reason: null
+  - id: A12
+    source: specs/architecture-tests/spec.md
+    text: Тип из любого слоя модуля A не должен зависеть от внутреннего слоя модуля
+      B (A ≠ B).
+    result: pending
+    reason: null
+  - id: A13
+    source: specs/architecture-tests/spec.md
+    text: Единственный межмодульный видимый тип — тип из
+      `TicketBooking.<B>.Contracts`.
+    result: pending
+    reason: null
+  - id: A14
+    source: specs/architecture-tests/spec.md
+    text: Запрещён доступ одного модуля к внутренним
+      моделям/DbContext/repositories/Domain другого модуля на уровне типов.
+    result: pending
+    reason: null
+  - id: A15
+    source: specs/architecture-tests/spec.md
+    text: Модуль может свободно использовать собственный `Contracts`; `Contracts` не
+      зависит от внутренних слоёв того же модуля (`Core`/etc.).
+    result: pending
+    reason: null
+  - id: A16
+    source: specs/architecture-tests/spec.md
+    text: Внутренние слои модуля могут зависеть от собственного `Contracts`.
+    result: pending
+    reason: null
+  - id: A17
+    source: specs/architecture-tests/spec.md
+    text: "Бизнес-модули (`TicketBooking.<Module>.*`) не должны зависеть от:"
+    result: pending
+    reason: null
+  - id: A18
+    source: specs/architecture-tests/spec.md
+    text: ASP.NET Core (`Microsoft.AspNetCore.*`);
+    result: pending
+    reason: null
+  - id: A19
+    source: specs/architecture-tests/spec.md
+    text: Aspire (`Aspire.*`);
+    result: pending
+    reason: null
+  - id: A20
+    source: specs/architecture-tests/spec.md
+    text: YARP (`Yarp.*`, `Microsoft.ReverseProxy*`);
+    result: pending
+    reason: null
+  - id: A21
+    source: specs/architecture-tests/spec.md
+    text: PaymentEmulator (`PaymentEmulator.*`);
+    result: pending
+    reason: null
+  - id: A22
+    source: specs/architecture-tests/spec.md
+    text: frontend/React (`React.*`, `Microsoft.JSInterop.*`, browser/WebAssembly
+      типов).
+    result: pending
+    reason: null
+  - id: A23
+    source: specs/architecture-tests/spec.md
+    text: "Бизнес-модули (`TicketBooking.<Module>.*`) не должны зависеть от
+      composition roots:"
+    result: pending
+    reason: null
+  - id: A24
+    source: specs/architecture-tests/spec.md
+    text: "`TicketBooking.Api`;"
+    result: pending
+    reason: null
+  - id: A25
+    source: specs/architecture-tests/spec.md
+    text: "`TicketBooking.Worker`;"
+    result: pending
+    reason: null
+  - id: A26
+    source: specs/architecture-tests/spec.md
+    text: "`TicketBooking.DatabaseMigrator`;"
+    result: pending
+    reason: null
+  - id: A27
+    source: specs/architecture-tests/spec.md
+    text: "`TicketBooking.Gateway`."
+    result: pending
+    reason: null
+  - id: A28
+    source: specs/architecture-tests/spec.md
+    text: "`TicketBooking.Gateway` не должен зависеть от внутренних слоёв
+      бизнес-модулей (только от `...Contracts`), т.е. не содержит
+      доменной/прикладной бизнес-логики (на project/namespace-уровне)."
+    result: pending
+    reason: null
+  - id: A29
+    source: specs/architecture-tests/spec.md
+    text: Тесты используют `TngTech.ArchUnitNET.TUnit` + `TUnit`; тестовые методы —
+      `[Test]`, правила выполняются через `.Check(Architecture)` /
+      `architecture.CheckRule(rule)`.
+    result: pending
+    reason: null
+  - id: A30
+    source: specs/architecture-tests/spec.md
+    text: Правила задаются через namespace-префиксы
+      (`ResideInNamespaceMatching`/`ResideInNamespace`) и регистр модулей,
+      вычисленный по загруженным сборкам.
+    result: pending
+    reason: null
+  - id: A31
+    source: specs/architecture-tests/spec.md
+    text: Набор должен быть «зелёным» на текущем состоянии репозитория (Phase 0,
+      каркас Companies) и автоматически распространяться на новые модули без
+      правки тестов.
+    result: pending
+    reason: null
+  - id: A32
+    source: specs/architecture-tests/spec.md
+    text: Должен присутствовать по крайней мере один наблюдаемый негативный кейс,
+      доказывающий способность правил обнаруживать нарушение (например,
+      правило-самопроверка, намеренно подающее нарушителя в отдельном сценарии).
+    result: pending
+    reason: null
+builder_handoff: null
+blockers: []
+verification: null
+history: []
+history_overflow:
+  dropped_entries: 0
+  first_dropped_at: null
+  last_dropped_at: null
+  outcome_counts:
+    pass: 0
+    fail: 0
+    blocked: 0
+    execution-error: 0
+    recovery: 0
+verification_result: pending
+verification_report: null
+archived: false
+created_at: 2026-08-27T12:04:26.400Z
