@@ -12,6 +12,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="../Modules/TicketBooking.Identity.Core/TicketBooking.Identity.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
       <Content Include="..\..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>

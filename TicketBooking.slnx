@@ -13,6 +13,9 @@
     <Project Path="src/Backend/Modules/TicketBooking.Companies.Contracts/TicketBooking.Companies.Contracts.csproj" />
     <Project Path="src/Backend/Modules/TicketBooking.Companies.Core/TicketBooking.Companies.Core.csproj" />
   </Folder>
+  <Folder Name="/src/Backend/Modules/Identity/">
+    <Project Path="src/Backend/Modules/TicketBooking.Identity.Core/TicketBooking.Identity.Core.csproj" />
+  </Folder>
   <Folder Name="/src/Frontend/">
     <Project Path="src/Frontend/backoffice-web/backoffice-web.esproj" />
     <Project Path="src/Frontend/public-web/client-web.esproj" />

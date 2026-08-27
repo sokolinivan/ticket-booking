@@ -12,4 +12,12 @@
         <PackageReference Include="TUnit" />
     </ItemGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="../../src/Backend/Modules/TicketBooking.Identity.Core/TicketBooking.Identity.Core.csproj" />
+        <ProjectReference Include="../../src/Backend/Modules/TicketBooking.Companies.Core/TicketBooking.Companies.Core.csproj" />
+        <ProjectReference Include="../../src/Backend/Modules/TicketBooking.Companies.Contracts/TicketBooking.Companies.Contracts.csproj" />
+        <ProjectReference Include="../../src/Backend/TicketBooking.BuildingBlocks/TicketBooking.BuildingBlocks.csproj" />
+        <ProjectReference Include="../../src/Backend/TicketBooking.Api/TicketBooking.Api.csproj" />
+    </ItemGroup>
+
 </Project>
