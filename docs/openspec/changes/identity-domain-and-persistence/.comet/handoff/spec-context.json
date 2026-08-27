@@ -1,0 +1,25 @@
+{
+  "change": "identity-domain-and-persistence",
+  "phase": "design",
+  "mode": "beta",
+  "canonical_spec": "openspec",
+  "generated_by": "comet-handoff.sh",
+  "context_hash": "8c3d4b2ddaa1a693f39106a647e14429df88c4bb1ecfa5932d04430184c38d6d",
+  "files": [
+    {
+      "path": "docs/openspec/changes/identity-domain-and-persistence/proposal.md",
+      "sha256": "6114aa297c5e52d1072a17a537683a2121e7eadf91ed5b3c53b51323c9e3c2b8",
+      "role": "supporting"
+    },
+    {
+      "path": "docs/openspec/changes/identity-domain-and-persistence/design.md",
+      "sha256": "defda72a4d9f69c84d49f7e746906807841653a96b8132baf9f8e195c24ed7f1",
+      "role": "supporting"
+    },
+    {
+      "path": "docs/openspec/changes/identity-domain-and-persistence/tasks.md",
+      "sha256": "ebb284f7ceeaecf4a482f2d2f440ddbf92b08e57f54a76ccb53f50ef331964b9",
+      "role": "supporting"
+    }
+  ]
+}
