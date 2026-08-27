@@ -17,3 +17,32 @@ In this repository, before starting work that may need code changes or investiga
 - If configuration or state is invalid and `nextCommand` is absent, stop and report the reason; do not guess another workflow.
 - Never attach unrelated work merely because an active change exists. The Native entry inspects uncommitted work; the probe does not attribute it automatically.
 </comet-ambient-resume>
+
+# TicketBooking
+
+TicketBooking is an early-stage event publishing, booking, payment, and electronic ticketing platform built as an ASP.NET Core modular monolith with two React frontends.
+
+## Essentials
+
+- Do not describe planned components as implemented; confirm current state from source and `docs/plan.md`.
+- Treat `.slnx`, `.csproj`, `package.json`, and source files as authoritative over forward-looking docs.
+- Frontends use pnpm independently; there is no root workspace, so never run `pnpm install` at the repository root.
+- Preserve unrelated user changes in a dirty worktree and make the smallest coherent change.
+- Add or update tests for changed behavior and report the commands actually run.
+
+## Commands
+
+- Restore .NET: `dotnet restore TicketBooking.slnx`
+- Build .NET: `dotnet build TicketBooking.slnx --no-restore`
+- Run tests: `dotnet run --project tests/TicketBooking.SystemTests --no-build`
+- Full setup and verification: [Development](docs/agent-instructions/development.md) and [Verification](docs/agent-instructions/verification.md)
+
+## Detailed Instructions
+
+- [Project Context](docs/agent-instructions/project-context.md)
+- [Development](docs/agent-instructions/development.md)
+- [Verification and Testing](docs/agent-instructions/verification.md)
+- [Code Style](docs/agent-instructions/code-style.md)
+- [Architecture](docs/agent-instructions/architecture.md)
+- [Security and Data](docs/agent-instructions/security.md)
+- [Delivery and Collaboration](docs/agent-instructions/delivery.md)
