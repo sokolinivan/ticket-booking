@@ -846,10 +846,10 @@ git commit -m "docs(identity): record persistence verification"
 
 ## Self-Review Checklist
 
-- [ ] Tasks 1-13 map only to tasks 1.1-5.2; no excluded authentication, HTTP, application-use-case, Audit, seed, or bootstrap behavior is introduced.
-- [ ] Domain coverage includes durable required user state, stable typed IDs, four lifecycle statuses, archived retention, independent roles/permissions, assignment metadata, and duplicate assignment guards.
-- [ ] Persistence coverage includes the `identity` schema, exactly five tables, schema-local migration history, explicit converters/comparers, internal FKs, stable constraints/indexes, and `Version bigint` concurrency.
-- [ ] PostgreSQL coverage includes empty-database migration, round trips, relationships, archive retention, every known uniqueness conflict, unknown failure distinction, and stale-write non-overwrite behavior.
-- [ ] Composition/deployment coverage includes API registration, Aspire database reference, Compose health/volume/dependency/configuration parity, and no source-controlled secrets.
-- [ ] Every behavior task follows red-green sequencing and ends with a focused executable verification command and coherent commit.
-- [ ] Type and naming consistency is preserved: `ticketbooking`, `identity`, `SystemUserId`, `RoleId`, `PermissionId`, `SystemUserStatus`, `IdentityDbContext`, `IdentityPersistenceException`, `IdentityPersistenceConflict`, and all `IdentityConstraintNames` are used consistently.
+- [x] Tasks 1-13 map only to tasks 1.1-5.2; no excluded authentication, HTTP, application-use-case, Audit, seed, or bootstrap behavior is introduced.
+- [x] Domain coverage includes durable required user state, stable typed IDs, four lifecycle statuses, archived retention, independent roles/permissions, assignment metadata, and duplicate assignment guards.
+- [x] Persistence coverage includes the `identity` schema, exactly five tables, schema-local migration history, explicit converters/comparers, internal FKs, stable constraints/indexes, and `Version bigint` concurrency.
+- [x] PostgreSQL coverage includes empty-database migration, round trips, relationships, archive retention, every known uniqueness conflict, unknown failure distinction, and stale-write non-overwrite behavior.
+- [x] Composition/deployment coverage includes API registration, Aspire database reference, Compose health/volume/dependency/configuration parity, and no source-controlled secrets.
+- [x] Every behavior task follows red-green sequencing and ends with a focused executable verification command and coherent commit.
+- [x] Type and naming consistency is preserved: `ticketbooking`, `identity`, `SystemUserId`, `RoleId`, `PermissionId`, `SystemUserStatus`, `IdentityDbContext`, `IdentityPersistenceException`, `IdentityPersistenceConflict`, and all `IdentityConstraintNames` are used consistently.
