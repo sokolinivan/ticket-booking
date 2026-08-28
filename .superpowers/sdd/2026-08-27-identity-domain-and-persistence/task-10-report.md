@@ -31,3 +31,16 @@ Implemented narrow translation of known PostgreSQL uniqueness violations into co
 
 - Tests require a reachable Docker daemon and access to the pinned `postgres:18.1-alpine` image.
 - Assignment tables currently define both a composite primary key and a unique index over the same columns. PostgreSQL reports the primary-key constraint for duplicate pairs, so both exact known names are allowlisted for each assignment conflict.
+
+## Review Fix Evidence
+
+- RED: temporarily broadened the translator from SQLSTATE `23505` to every `PostgresException`, then ran `dotnet run --project tests/TicketBooking.IntegrationTests -- --treenode-filter "/*/*/IdentityUniquenessConflictTests/SaveChangesAsync_NonUniqueProviderFailure_PreservesDbUpdateException" --minimum-expected-tests 1`.
+  - Result: the real PostgreSQL `23514` check violation was incorrectly wrapped as `IdentityPersistenceException`; the test failed expecting the original `DbUpdateException`.
+- GREEN: restored the exact `23505` guard and reran the focused command.
+  - Result: 1 test passed, 0 failed, 0 skipped.
+- GREEN: `dotnet run --project tests/TicketBooking.IntegrationTests --no-build -- --treenode-filter "/*/*/IdentityUniquenessConflictTests/*" --minimum-expected-tests 1`.
+  - Result: 8 tests passed, 0 failed, 0 skipped.
+- `dotnet build tests/TicketBooking.IntegrationTests/TicketBooking.IntegrationTests.csproj --no-restore`
+  - Result: succeeded with 0 warnings and 0 errors.
+- `git diff --check`
+  - Result: no whitespace errors.

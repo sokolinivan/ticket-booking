@@ -138,6 +138,36 @@ public class IdentityUniquenessConflictTests(PostgreSqlFixture database)
             .IsEqualTo(IdentityConstraintNames.RolesPrimaryKey);
     }
 
+    [Test]
+    public async Task SaveChangesAsync_NonUniqueProviderFailure_PreservesDbUpdateException()
+    {
+        await database.ResetAndMigrateAsync();
+        await using var context = database.CreateContext();
+        await context.Database.ExecuteSqlRawAsync(
+            """
+            ALTER TABLE identity."Roles"
+            ADD CONSTRAINT "UX_Roles_Code"
+            CHECK ("Code" <> 'provider.failure')
+            """);
+        context.Roles.Add(Role.Create(new RoleId(Guid.NewGuid()), "provider.failure", "Provider failure"));
+
+        Exception? failure = null;
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (Exception exception)
+        {
+            failure = exception;
+        }
+
+        await Assert.That(failure).IsTypeOf<DbUpdateException>();
+        await Assert.That(failure).IsNotTypeOf<IdentityPersistenceException>();
+        await Assert.That(failure!.InnerException).IsTypeOf<PostgresException>();
+        await Assert.That(((PostgresException)failure.InnerException!).SqlState)
+            .IsEqualTo(PostgresErrorCodes.CheckViolation);
+    }
+
     private async Task SaveUserAsync(SystemUser user)
     {
         await using var context = database.CreateContext();
