@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: src/Backend/TicketBooking.Api/Dockerfile
     environment:
-      ConnectionStrings__ticketbooking: "Host=postgres;Port=5432;Database=${POSTGRES_DB:-ticketbooking};Username=${POSTGRES_USER:?required};Password=${POSTGRES_PASSWORD:?required}"
+      ConnectionStrings__ticketbooking: "${TICKETBOOKING_CONNECTION_STRING:?required}"
     depends_on:
       postgres:
         condition: service_healthy

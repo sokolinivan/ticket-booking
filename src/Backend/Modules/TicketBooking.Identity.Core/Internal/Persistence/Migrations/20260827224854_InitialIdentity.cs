@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 #nullable disable
 #pragma warning disable CA1861
 
-namespace TicketBooking.Identity.Core.Internal.Persistence.Migrations
+namespace TicketBooking.Identity.Internal.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialIdentity : Migration
+    partial class InitialIdentity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

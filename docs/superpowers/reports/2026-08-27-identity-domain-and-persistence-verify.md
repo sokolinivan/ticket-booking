@@ -23,7 +23,7 @@ dotnet run --project tests/TicketBooking.UnitTests --no-build -- --minimum-expec
 dotnet run --project tests/TicketBooking.ArchitectureTests --no-build -- --minimum-expected-tests 1
 dotnet run --project tests/TicketBooking.IntegrationTests --no-build -- --minimum-expected-tests 1
 dotnet run --project tests/TicketBooking.SystemTests --no-build
-POSTGRES_USER=test POSTGRES_PASSWORD=test POSTGRES_DB=ticketbooking docker compose config --quiet
+POSTGRES_USER=test POSTGRES_PASSWORD=test POSTGRES_DB=ticketbooking TICKETBOOKING_CONNECTION_STRING='Host=postgres;Port=5432;Database=ticketbooking;Username=test;Password=test' docker compose config --quiet
 aspire start --isolated --non-interactive
 aspire stop --non-interactive
 aspire doctor --non-interactive
@@ -74,7 +74,7 @@ git diff --stat 15bdc95546713a8af47ffd2a9962f99e648d05cd
 - Compose config: exit 0 with injected test-only credentials and no output.
 - Initial isolated Compose runtime acceptance: failed during API image restore because the Dockerfile copied only `TicketBooking.Api.csproj`; `Directory.Packages.props` and the newly referenced Identity Core project were unavailable, producing `NU1015` for `Microsoft.AspNetCore.OpenApi` and a skipped project-reference warning. Although the Dockerfile predates Tasks 1-12, Task 1's project reference caused this verification failure. The Task 13-permitted repair copies `Directory.Build.props`, `Directory.Packages.props`, and only the API and Identity Core project files before restore, then copies all sources, preserving dependency-layer caching.
 - Repeated isolated Compose runtime acceptance: exit 0. The API image restored, built, and published successfully with 0 warnings and 0 errors. Compose created only the `ticketbooking-task13-verify` project resources; PostgreSQL reached `healthy` and the API reached `running` after the healthy-database dependency completed.
-- API connection setting: `printenv ConnectionStrings__ticketbooking` returned `Host=postgres;Port=5432;Database=task13_db;Username=task13_user;Password=task13_temp_20260828`, proving Compose supplied the equivalent database capability to the API.
+- API connection setting: Compose originally derived `ConnectionStrings__ticketbooking` from `POSTGRES_*`. Whole-branch repair superseded that unsafe derivation with the required deployment-provided `TICKETBOOKING_CONNECTION_STRING`, which Compose maps unchanged to the canonical API setting.
 - Named-volume persistence: sentinel table creation and insert returned `CREATE TABLE` and `INSERT 0 1`. PostgreSQL was stopped and removed without deleting its volume, recreated healthy, and the query returned `persists-across-recreation`.
 - Compose cleanup: `down --volumes --rmi local --remove-orphans` removed both containers, the isolated network, `ticketbooking-task13-verify_postgres-data`, and the locally built API image. The subsequent filtered container, volume, network, and image check returned no output.
 - Final Dockerfile review verification: a fresh `--no-cache` image build restored both the API and Identity Core projects, then built and published successfully with 0 warnings and 0 errors. The temporary `ticketbooking-api:task13-review` image was removed afterward.
@@ -90,3 +90,15 @@ git diff --stat 15bdc95546713a8af47ffd2a9962f99e648d05cd
 - Aspire CLI 13.5.2 is one patch behind the 13.5.3 AppHost SDK. No tool upgrade or user trust-store change was made.
 - Frontend checks auto-installed local dependencies because app lockfiles are not tracked. Generated `dist/`, `package-lock.json`, and `pnpm-lock.yaml` artifacts were not committed.
 - The Compose credentials recorded above were temporary acceptance-only values, supplied at invocation rather than embedded in deployment source. The isolated named volume that contained them and the sentinel was deleted during cleanup.
+
+## Whole-Branch Repair Verification
+
+The superseding Compose contract requires both PostgreSQL initialization values and a complete deployment-provided `TICKETBOOKING_CONNECTION_STRING`. This allows the deployment system to quote arbitrary valid PostgreSQL passwords according to Npgsql connection-string grammar rather than interpolating raw password text into that grammar.
+
+- `docker compose config --quiet` passed with password `p@ss;quo'te=x` and `Password="p@ss;quo'te=x"` in the complete connection string.
+- `docker compose -p ticketbooking-whole-review-fix up -d --build --wait --wait-timeout 180` built successfully; PostgreSQL and API both became healthy.
+- The API environment contained `Host=postgres;Port=5432;Database=whole_review_db;Username=whole_review_user;Password="p@ss;quo'te=x"` unchanged.
+- `psql` authenticated with the same special-character password and returned `whole_review_user:whole_review_db`.
+- `dotnet build TicketBooking.slnx --no-restore` passed with 0 warnings and 0 errors.
+- Architecture tests passed 6/6; PostgreSQL integration tests, including migration application and discovery, passed 19/19.
+- `docker compose ... down --volumes --rmi local --remove-orphans` removed the isolated acceptance resources.

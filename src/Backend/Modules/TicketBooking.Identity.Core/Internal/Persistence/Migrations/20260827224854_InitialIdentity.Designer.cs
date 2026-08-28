@@ -9,7 +9,7 @@ using TicketBooking.Identity.Internal.Persistence;
 
 #nullable disable
 
-namespace TicketBooking.Identity.Core.Internal.Persistence.Migrations
+namespace TicketBooking.Identity.Internal.Persistence.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
     [Migration("20260827224854_InitialIdentity")]

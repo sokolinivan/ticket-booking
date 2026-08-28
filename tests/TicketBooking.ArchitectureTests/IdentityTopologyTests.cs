@@ -41,8 +41,9 @@ public class IdentityTopologyTests
             @"(?m)^\s+ConnectionStrings__ticketbooking:\s*[""']?(?<value>[^\r\n""']+)");
 
         await Assert.That(connectionString.Success).IsTrue();
-        await Assert.That(connectionString.Groups["value"].Value).Contains("Host=postgres;");
-        await Assert.That(connectionString.Groups["value"].Value).Contains("Database=${POSTGRES_DB:-ticketbooking};");
+        await Assert.That(connectionString.Groups["value"].Value)
+            .IsEqualTo("${TICKETBOOKING_CONNECTION_STRING:?required}");
+        await Assert.That(api).DoesNotContain("POSTGRES_PASSWORD");
     }
 
     [Test]

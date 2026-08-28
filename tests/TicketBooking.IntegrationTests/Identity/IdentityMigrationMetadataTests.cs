@@ -22,6 +22,9 @@ public class IdentityMigrationMetadataTests
 
         var migrationsAssembly = context.GetService<IMigrationsAssembly>();
         var migrationType = migrationsAssembly.Migrations.Single().Value;
+        await Assert.That(migrationType.Namespace)
+            .IsEqualTo("TicketBooking.Identity.Internal.Persistence.Migrations");
+        await Assert.That(migrationType.IsPublic).IsFalse();
         var migration = migrationsAssembly.CreateMigration(migrationType, context.Database.ProviderName!);
 
         await Assert.That(migration.UpOperations.OfType<EnsureSchemaOperation>().Select(operation => operation.Name))
