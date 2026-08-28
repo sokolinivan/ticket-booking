@@ -7,4 +7,5 @@ internal enum IdentityPersistenceConflict
     DuplicatePermissionCode,
     DuplicateSystemUserRole,
     DuplicateRolePermission,
+    Concurrency,
 }

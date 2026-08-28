@@ -14,9 +14,15 @@ internal sealed class IdentityDbContext(DbContextOptions<IdentityDbContext> opti
 
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {
+        AdvanceVersions();
+
         try
         {
             return base.SaveChanges(acceptAllChangesOnSuccess);
+        }
+        catch (DbUpdateConcurrencyException exception)
+        {
+            throw new IdentityPersistenceException(IdentityPersistenceConflict.Concurrency, exception);
         }
         catch (DbUpdateException exception) when (Translate(exception) is { } translated)
         {
@@ -28,9 +34,15 @@ internal sealed class IdentityDbContext(DbContextOptions<IdentityDbContext> opti
         bool acceptAllChangesOnSuccess,
         CancellationToken cancellationToken = default)
     {
+        AdvanceVersions();
+
         try
         {
             return await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        }
+        catch (DbUpdateConcurrencyException exception)
+        {
+            throw new IdentityPersistenceException(IdentityPersistenceConflict.Concurrency, exception);
         }
         catch (DbUpdateException exception) when (Translate(exception) is { } translated)
         {
@@ -42,6 +54,22 @@ internal sealed class IdentityDbContext(DbContextOptions<IdentityDbContext> opti
     {
         modelBuilder.HasDefaultSchema("identity");
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(IdentityDbContext).Assembly);
+    }
+
+    private void AdvanceVersions()
+    {
+        foreach (var entry in ChangeTracker.Entries())
+        {
+            if (entry.State != EntityState.Modified
+                || entry.Entity is not (SystemUser or Role or Permission))
+            {
+                continue;
+            }
+
+            var version = entry.Property(nameof(SystemUser.Version));
+            var originalVersion = (long)version.OriginalValue!;
+            version.CurrentValue = checked(originalVersion + 1);
+        }
     }
 
     private static IdentityPersistenceException? Translate(DbUpdateException exception)
