@@ -102,3 +102,40 @@ The superseding Compose contract requires both PostgreSQL initialization values 
 - `dotnet build TicketBooking.slnx --no-restore` passed with 0 warnings and 0 errors.
 - Architecture tests passed 6/6; PostgreSQL integration tests, including migration application and discovery, passed 19/19.
 - `docker compose ... down --volumes --rmi local --remove-orphans` removed the isolated acceptance resources.
+
+## Comet Full Verification
+
+### Summary
+
+| Dimension | Status |
+| --- | --- |
+| Completeness | PASS: 14/14 OpenSpec tasks complete; all seven requirements implemented |
+| Correctness | PASS: all 13 specification scenarios have implementation and automated or runtime evidence |
+| Coherence | PASS: implementation follows the OpenSpec design and technical Design Doc |
+
+Fresh verification after the whole-branch repairs:
+
+- `dotnet format TicketBooking.slnx --verify-no-changes --no-restore`: exit 0; the workspace loader emitted an informational warning but reported no formatting changes.
+- `dotnet build TicketBooking.slnx --no-restore -warnaserror`: exit 0, 0 warnings, 0 errors.
+- Unit tests: 50 passed, 0 failed, 0 skipped.
+- Architecture tests: 6 passed, 0 failed, 0 skipped.
+- PostgreSQL integration tests: 19 passed, 0 failed, 0 skipped.
+- System tests: 27 passed, 0 failed, 0 skipped.
+- `docker compose config --quiet` with a quoted special-character password: exit 0.
+- Public frontend lint and production build: exit 0.
+- Backoffice frontend lint and production build: exit 0.
+- `git diff --check`: exit 0.
+
+The final whole-branch review covered `15bdc95546713a8af47ffd2a9962f99e648d05cd..776d7e4` and approved the change with no Critical or Important findings. Its earlier findings about Compose password parsing and migration visibility were repaired and covered by regression tests. The subsequent `0cc99ad` commit changes only completed plan checkboxes, so no implementation diff was added after that review.
+
+### Requirement And Scenario Coverage
+
+- Durable lifecycle-controlled users: unit construction/lifecycle tests plus PostgreSQL round-trip, duplicate-login, and archive-retention tests.
+- Independent roles and permissions: unit assignment invariants plus PostgreSQL relationship and duplicate-assignment tests.
+- Module isolation: architecture rules, internal persistence/migration types, model metadata, and empty-database migration coverage.
+- Concurrent modifications: explicit `Version bigint` metadata and real two-context stale-write/non-overwrite coverage.
+- Controlled conflicts: every known `23505` constraint and real unknown PostgreSQL failure distinction are covered.
+- Equivalent local topology: AppHost health/reference evidence and isolated Compose health, API setting, special-character credential, and named-volume persistence evidence.
+- Required lookups: model and migration metadata assert unique login/code/pair indexes plus email/status lookup indexes.
+
+No Critical, Warning, or Suggestion issues remain. All checks passed; the change is ready for archive confirmation.
