@@ -7,7 +7,9 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+COPY ["Directory.Build.props", "Directory.Packages.props", "./"]
 COPY ["src/Backend/TicketBooking.Api/TicketBooking.Api.csproj", "src/Backend/TicketBooking.Api/"]
+COPY ["src/Backend/Modules/TicketBooking.Identity.Core/TicketBooking.Identity.Core.csproj", "src/Backend/Modules/TicketBooking.Identity.Core/"]
 RUN dotnet restore "src/Backend/TicketBooking.Api/TicketBooking.Api.csproj"
 COPY . .
 WORKDIR "/src/src/Backend/TicketBooking.Api"
