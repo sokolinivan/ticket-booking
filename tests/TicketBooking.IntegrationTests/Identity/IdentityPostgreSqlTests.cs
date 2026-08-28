@@ -11,29 +11,14 @@ public class IdentityPostgreSqlTests(PostgreSqlFixture database)
     [Test]
     public async Task MigrateAsync_EmptyDatabase_CreatesIdentitySchema()
     {
-        await database.ResetAndMigrateAsync();
+        await database.ResetAsync();
         await using var context = database.CreateContext();
 
-        await using var command = (NpgsqlCommand)context.Database.GetDbConnection().CreateCommand();
-        command.CommandText =
-            """
-            SELECT table_name
-            FROM information_schema.tables
-            WHERE table_schema = 'identity'
-            ORDER BY table_name;
-            """;
-        await context.Database.OpenConnectionAsync();
+        await Assert.That(await GetIdentityTablesAsync(context)).IsEmpty();
 
-        var tables = new List<string>();
-        await using (var reader = await command.ExecuteReaderAsync())
-        {
-            while (await reader.ReadAsync())
-            {
-                tables.Add(reader.GetString(0));
-            }
-        }
+        await context.Database.MigrateAsync();
 
-        await Assert.That(tables).IsEquivalentTo(
+        await Assert.That(await GetIdentityTablesAsync(context)).IsEquivalentTo(
         [
             "__EFMigrationsHistory",
             "Permissions",
@@ -42,6 +27,58 @@ public class IdentityPostgreSqlTests(PostgreSqlFixture database)
             "SystemUserRoles",
             "SystemUsers",
         ]);
+        await Assert.That(await GetCatalogNamesAsync(
+            context,
+            "SELECT constraint_name FROM information_schema.table_constraints WHERE table_schema = 'identity' AND constraint_type IN ('PRIMARY KEY', 'FOREIGN KEY') ORDER BY constraint_name"))
+            .IsEquivalentTo(
+            [
+                "FK_RolePermissions_Permissions_PermissionId",
+                "FK_RolePermissions_Roles_RoleId",
+                "FK_SystemUserRoles_Roles_RoleId",
+                "FK_SystemUserRoles_SystemUsers_SystemUserId",
+                "PK_Permissions",
+                "PK_RolePermissions",
+                "PK_Roles",
+                "PK_SystemUserRoles",
+                "PK_SystemUsers",
+                "PK___EFMigrationsHistory",
+            ]);
+        await Assert.That(await GetCatalogNamesAsync(
+            context,
+            "SELECT indexname FROM pg_indexes WHERE schemaname = 'identity' ORDER BY indexname"))
+            .IsEquivalentTo(
+            [
+                "IX_RolePermissions_PermissionId",
+                "IX_SystemUserRoles_RoleId",
+                "IX_SystemUsers_Email",
+                "IX_SystemUsers_Status",
+                "PK_Permissions",
+                "PK_RolePermissions",
+                "PK_Roles",
+                "PK_SystemUserRoles",
+                "PK_SystemUsers",
+                "PK___EFMigrationsHistory",
+                "UX_Permissions_Code",
+                "UX_RolePermissions_RoleId_PermissionId",
+                "UX_Roles_Code",
+                "UX_SystemUserRoles_SystemUserId_RoleId",
+                "UX_SystemUsers_NormalizedLogin",
+            ]);
+        await Assert.That(await GetCatalogNamesAsync(
+            context,
+            "SELECT table_name || '.' || column_name FROM information_schema.columns WHERE table_schema = 'identity' ORDER BY table_name, ordinal_position"))
+            .IsEquivalentTo(
+            [
+                "Permissions.Id", "Permissions.Code", "Permissions.Name", "Permissions.Version",
+                "RolePermissions.RoleId", "RolePermissions.PermissionId",
+                "Roles.Id", "Roles.Code", "Roles.Name", "Roles.Version",
+                "SystemUserRoles.SystemUserId", "SystemUserRoles.RoleId", "SystemUserRoles.AssignedAt", "SystemUserRoles.AssignedBy",
+                "SystemUsers.Id", "SystemUsers.Login", "SystemUsers.NormalizedLogin", "SystemUsers.PasswordHash",
+                "SystemUsers.FirstName", "SystemUsers.LastName", "SystemUsers.Email", "SystemUsers.PhoneNumber",
+                "SystemUsers.Status", "SystemUsers.LastLoginAt", "SystemUsers.FailedLoginAttempts", "SystemUsers.CreatedAt",
+                "SystemUsers.CreatedBy", "SystemUsers.UpdatedAt", "SystemUsers.UpdatedBy", "SystemUsers.Version",
+                "__EFMigrationsHistory.MigrationId", "__EFMigrationsHistory.ProductVersion",
+            ]);
 
         var appliedMigrations = await context.Database.GetAppliedMigrationsAsync();
         await Assert.That(appliedMigrations).IsEquivalentTo(["20260827224854_InitialIdentity"]);
@@ -108,15 +145,38 @@ public class IdentityPostgreSqlTests(PostgreSqlFixture database)
         await Assert.That(administratorAssignment.AssignedAt).IsEqualTo(assignedAt);
         await Assert.That(administratorAssignment.AssignedBy).IsEqualTo("security-admin");
         await Assert.That(administratorAssignment.Role.Id).IsEqualTo(administratorId);
+        await Assert.That(administratorAssignment.Role.Code).IsEqualTo("administrator");
+        await Assert.That(administratorAssignment.Role.Name).IsEqualTo("Administrator");
         await Assert.That(administratorAssignment.Role.Version).IsEqualTo(1L);
-        await Assert.That(administratorAssignment.Role.Permissions.Select(item => item.PermissionId))
-            .IsEquivalentTo([publishPermissionId, refundPermissionId]);
-        await Assert.That(administratorAssignment.Role.Permissions.Select(item => item.Permission.Version))
-            .IsEquivalentTo([1L, 1L]);
+        var publishAssociation = administratorAssignment.Role.Permissions.Single(item => item.PermissionId == publishPermissionId);
+        await Assert.That(publishAssociation.RoleId).IsEqualTo(administratorId);
+        await Assert.That(publishAssociation.Role.Id).IsEqualTo(administratorId);
+        await Assert.That(publishAssociation.PermissionId).IsEqualTo(publishPermissionId);
+        await Assert.That(publishAssociation.Permission.Id).IsEqualTo(publishPermissionId);
+        await Assert.That(publishAssociation.Permission.Code).IsEqualTo("events.publish");
+        await Assert.That(publishAssociation.Permission.Name).IsEqualTo("Publish events");
+        await Assert.That(publishAssociation.Permission.Version).IsEqualTo(1L);
+        await Assert.That(publishAssociation.Permission.Roles.Single().RoleId).IsEqualTo(administratorId);
+
+        var refundAssociation = administratorAssignment.Role.Permissions.Single(item => item.PermissionId == refundPermissionId);
+        await Assert.That(refundAssociation.RoleId).IsEqualTo(administratorId);
+        await Assert.That(refundAssociation.Role.Id).IsEqualTo(administratorId);
+        await Assert.That(refundAssociation.PermissionId).IsEqualTo(refundPermissionId);
+        await Assert.That(refundAssociation.Permission.Id).IsEqualTo(refundPermissionId);
+        await Assert.That(refundAssociation.Permission.Code).IsEqualTo("payments.refund");
+        await Assert.That(refundAssociation.Permission.Name).IsEqualTo("Refund payments");
+        await Assert.That(refundAssociation.Permission.Version).IsEqualTo(1L);
+        await Assert.That(refundAssociation.Permission.Roles.Single().RoleId).IsEqualTo(administratorId);
 
         var publisherAssignment = reloaded.Roles.Single(assignment => assignment.RoleId == publisherId);
+        await Assert.That(publisherAssignment.SystemUserId).IsEqualTo(userId);
         await Assert.That(publisherAssignment.AssignedAt).IsEqualTo(assignedAt.AddMinutes(1));
         await Assert.That(publisherAssignment.AssignedBy).IsEqualTo("identity-admin");
+        await Assert.That(publisherAssignment.Role.Id).IsEqualTo(publisherId);
+        await Assert.That(publisherAssignment.Role.Code).IsEqualTo("publisher");
+        await Assert.That(publisherAssignment.Role.Name).IsEqualTo("Publisher");
+        await Assert.That(publisherAssignment.Role.Version).IsEqualTo(1L);
+        await Assert.That(publisherAssignment.Role.Permissions).IsEmpty();
     }
 
     [Test]
@@ -152,5 +212,24 @@ public class IdentityPostgreSqlTests(PostgreSqlFixture database)
         await Assert.That(reloaded.UpdatedAt).IsEqualTo(archivedAt);
         await Assert.That(reloaded.UpdatedBy).IsEqualTo("security-admin");
         await Assert.That(reloaded.Version).IsEqualTo(1L);
+    }
+
+    private static Task<List<string>> GetIdentityTablesAsync(DbContext context) => GetCatalogNamesAsync(
+        context,
+        "SELECT table_name FROM information_schema.tables WHERE table_schema = 'identity' ORDER BY table_name");
+
+    private static async Task<List<string>> GetCatalogNamesAsync(DbContext context, string sql)
+    {
+        await context.Database.OpenConnectionAsync();
+        await using var command = (NpgsqlCommand)context.Database.GetDbConnection().CreateCommand();
+        command.CommandText = sql;
+        var values = new List<string>();
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync())
+        {
+            values.Add(reader.GetString(0));
+        }
+
+        return values;
     }
 }

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using Testcontainers.PostgreSql;
 using TicketBooking.Identity.Internal.Persistence;
 using TUnit.Core.Interfaces;
@@ -17,9 +18,24 @@ public sealed class PostgreSqlFixture : IAsyncInitializer, IAsyncDisposable
 
     public async Task ResetAndMigrateAsync()
     {
+        await ResetAsync();
+        await using var context = CreateContext();
+        await context.Database.MigrateAsync();
+    }
+
+    public async Task ResetAsync()
+    {
         await using var context = CreateContext();
         await context.Database.EnsureDeletedAsync();
-        await context.Database.MigrateAsync();
+
+        var builder = new NpgsqlConnectionStringBuilder(_container.GetConnectionString());
+        var databaseName = builder.Database ?? throw new InvalidOperationException("The test database name is required.");
+        builder.Database = "postgres";
+        await using var connection = new NpgsqlConnection(builder.ConnectionString);
+        await connection.OpenAsync();
+        await using var command = connection.CreateCommand();
+        command.CommandText = $"CREATE DATABASE {new NpgsqlCommandBuilder().QuoteIdentifier(databaseName)}";
+        await command.ExecuteNonQueryAsync();
     }
 
     internal IdentityDbContext CreateContext()
