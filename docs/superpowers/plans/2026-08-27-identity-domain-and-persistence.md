@@ -2,6 +2,7 @@
 change: identity-domain-and-persistence
 design-doc: docs/superpowers/specs/2026-08-27-identity-domain-and-persistence-design.md
 base-ref: 15bdc95546713a8af47ffd2a9962f99e648d05cd
+archived-with: 2026-08-28-identity-domain-and-persistence
 ---
 
 # Identity Domain And Persistence Implementation Plan

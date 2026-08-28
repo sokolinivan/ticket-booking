@@ -2,6 +2,8 @@
 comet_change: identity-domain-and-persistence
 role: technical-design
 canonical_spec: openspec
+archived-with: 2026-08-28-identity-domain-and-persistence
+status: final
 ---
 
 # Identity Domain And Persistence Technical Design
