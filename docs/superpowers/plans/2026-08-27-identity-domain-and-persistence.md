@@ -560,15 +560,15 @@ git commit -m "feat(identity): add initial identity migration"
 - Consumes: Docker, a pinned `Testcontainers.PostgreSql` package, and the initial migration.
 - Produces: a per-test-session PostgreSQL container fixture, isolated clean database/schema state per test, `CreateContext()` using the fixture connection, and proof of migration application, round trips, relationships, and archived retention.
 
-- [ ] **Step 1: Add the centrally pinned Testcontainers dependency and fixture skeleton**
+- [x] **Step 1: Add the centrally pinned Testcontainers dependency and fixture skeleton**
 
 Add the current compatible `Testcontainers.PostgreSql` version to `Directory.Packages.props` and an unversioned test-project reference. Implement TUnit async initialization/disposal around `PostgreSqlBuilder`, with a non-production test-only database/user/password generated or fixed solely inside test process configuration. Expose `ResetAndMigrateAsync()` and `CreateContext()`; do not commit an `.env` file.
 
-- [ ] **Step 2: Write failing migration application tests**
+- [x] **Step 2: Write failing migration application tests**
 
 Apply `Database.MigrateAsync()` to an empty database. Query PostgreSQL catalogs to assert schema `identity`, all five tables, and `identity.__EFMigrationsHistory`; assert `GetAppliedMigrationsAsync()` matches the generated migration.
 
-- [ ] **Step 3: Run the migration application test red**
+- [x] **Step 3: Run the migration application test red**
 
 ```bash
 dotnet run --project tests/TicketBooking.IntegrationTests -- --treenode-filter "/*/*/IdentityPostgreSqlTests/MigrateAsync_EmptyDatabase_CreatesIdentitySchema" --minimum-expected-tests 1
@@ -576,26 +576,26 @@ dotnet run --project tests/TicketBooking.IntegrationTests -- --treenode-filter "
 
 Expected: initial fixture/test failure before migration setup is completed. If Docker is unavailable, stop and report the environmental blocker rather than changing providers.
 
-- [ ] **Step 4: Complete fixture migration setup and make migration test green**
+- [x] **Step 4: Complete fixture migration setup and make migration test green**
 
 Reset only the isolated test database between tests, create a new context, and call `MigrateAsync`. Keep migrations in the Identity assembly and history in `identity`.
 
-- [ ] **Step 5: Write failing round-trip, relationship, and archived-retention tests**
+- [x] **Step 5: Write failing round-trip, relationship, and archived-retention tests**
 
 Persist one user with two roles, one role with two permissions, and assignment metadata; clear the change tracker; reload using explicit includes; assert scalar fields, typed IDs, joins, actors/timestamps, and version `1`. In a separate test archive a user, save, clear, reload by ID, and assert the row still exists with `Archived` status.
 
-- [ ] **Step 6: Make only persistence-access adjustments needed by the tests**
+- [x] **Step 6: Make only persistence-access adjustments needed by the tests**
 
 Adjust internal collection backing-field mapping or EF materialization constructors as necessary. Do not add repositories, application services, endpoints, or seed data.
 
-- [ ] **Step 7: Run focused PostgreSQL coverage green**
+- [x] **Step 7: Run focused PostgreSQL coverage green**
 
 ```bash
 dotnet build tests/TicketBooking.IntegrationTests/TicketBooking.IntegrationTests.csproj
 dotnet run --project tests/TicketBooking.IntegrationTests --no-build -- --treenode-filter "/*/*/IdentityPostgreSqlTests/*" --minimum-expected-tests 1
 ```
 
-- [ ] **Step 8: Commit PostgreSQL integration infrastructure and behavior**
+- [x] **Step 8: Commit PostgreSQL integration infrastructure and behavior**
 
 ```bash
 git add Directory.Packages.props tests/TicketBooking.IntegrationTests src/Backend/Modules/TicketBooking.Identity.Core

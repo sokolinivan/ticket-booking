@@ -1,18 +1,18 @@
 # Subagent Progress
 
-- Plan task: Task 8: Generate And Verify The Initial Migration (task 4.1)
-- OpenSpec task: 4.1 Generate the initial module-owned Identity migration and verify its operations create the schema, five tables, internal keys, indexes, constraints, and concurrency column.
+- Plan task: Task 9: Add PostgreSQL Fixture, Migration, And Round-Trip Coverage (task 4.2)
+- OpenSpec task: 4.2 Add PostgreSQL container integration coverage for migration application, entity round trips, relationships, and archived-user retention; verify the focused integration test suite passes.
 - Stage: done
 - Model: standard
 - Review mode: thorough
 - TDD mode: tdd
-- Implementation commit: 41f8422
-- Changed files: design-time factory, generated migration/designer/snapshot, migration metadata tests, Identity project
-- RED evidence: migration test expected one migration and found zero
-- GREEN evidence: build zero warnings/errors; model metadata 3/3; migration metadata 1/1
-- Review passed: spec PASS; quality PASS with deferred minor test gap
-- Review-fix round: 0/2
-- Risk signals: data/schema migration; large generated diff
-- Unresolved feedback: minor migration metadata test does not directly assert index table/columns/uniqueness; final review must triage
+- Implementation commit: 8e5807a
+- Changed files: Directory.Packages.props, IntegrationTests project, PostgreSqlFixture, IdentityPostgreSqlTests
+- RED evidence: migration test failed before fixture implementation
+- GREEN evidence: build zero warnings/errors; PostgreSQL suite 3/3
+- Review passed: spec PASS; quality APPROVED after fix round 1
+- Review-fix round: 1/2
+- Risk signals: SQL/database integration; Docker; shared test state
+- Unresolved feedback: none
 - Unresolved feedback: none
 - Unresolved feedback: none
