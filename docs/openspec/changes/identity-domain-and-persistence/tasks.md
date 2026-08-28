@@ -25,4 +25,4 @@
 ## 5. Verification And Deployment Consistency
 
 - [x] 5.1 Add the shared PostgreSQL resource and API reference to AppHost, create or update root Docker Compose with an equivalent PostgreSQL service, volume, health check, and connection-string setting, and verify both topologies expose equivalent runtime configuration without source-controlled secrets.
-- [ ] 5.2 Run formatting, restore, build, unit, architecture, integration, and system verification commands required by repository guidance and record the exact successful commands in the verification report.
+- [x] 5.2 Run formatting, restore, build, unit, architecture, integration, and system verification commands required by repository guidance and record the exact successful commands in the verification report.

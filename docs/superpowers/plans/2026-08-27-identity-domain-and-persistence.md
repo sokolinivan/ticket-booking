@@ -766,7 +766,7 @@ git commit -m "feat(identity): add shared postgres topology"
 - Consumes: completed scoped implementation and repository verification guidance.
 - Produces: exact successful commands, outcome summaries, test counts where available, environment prerequisites, and explicit skipped/unavailable checks in the verification report.
 
-- [ ] **Step 1: Restore and verify formatting**
+- [x] **Step 1: Restore and verify formatting**
 
 ```bash
 dotnet restore TicketBooking.slnx
@@ -775,7 +775,7 @@ dotnet format TicketBooking.slnx --verify-no-changes --no-restore
 
 Expected: both exit zero. If format reports changes, run `dotnet format TicketBooking.slnx --no-restore`, inspect only scoped formatting edits, then rerun verification mode.
 
-- [ ] **Step 2: Build the complete solution with warnings as errors**
+- [x] **Step 2: Build the complete solution with warnings as errors**
 
 ```bash
 dotnet build TicketBooking.slnx --no-restore
@@ -783,7 +783,7 @@ dotnet build TicketBooking.slnx --no-restore
 
 Expected: zero warnings and zero errors.
 
-- [ ] **Step 3: Run unit, architecture, and PostgreSQL integration executables**
+- [x] **Step 3: Run unit, architecture, and PostgreSQL integration executables**
 
 ```bash
 dotnet run --project tests/TicketBooking.UnitTests --no-build -- --minimum-expected-tests 1
@@ -793,7 +793,7 @@ dotnet run --project tests/TicketBooking.IntegrationTests --no-build -- --minimu
 
 Expected: all pass; IntegrationTests applies real migrations against Docker PostgreSQL.
 
-- [ ] **Step 4: Run existing system verification**
+- [x] **Step 4: Run existing system verification**
 
 ```bash
 dotnet run --project tests/TicketBooking.SystemTests --no-build
@@ -801,7 +801,7 @@ dotnet run --project tests/TicketBooking.SystemTests --no-build
 
 Expected: all pre-existing system tests pass.
 
-- [ ] **Step 5: Verify Compose and AppHost resource topology**
+- [x] **Step 5: Verify Compose and AppHost resource topology**
 
 ```bash
 POSTGRES_USER=test POSTGRES_PASSWORD=test POSTGRES_DB=ticketbooking docker compose config --quiet
@@ -812,7 +812,7 @@ aspire stop --non-interactive
 
 Run Aspire commands from `src/Aspire/TicketBooking.AppHost`. Confirm `postgres`, `ticketbooking`, and `ticketbooking-api` appear and API waits for the healthy database. The known Vite/npm installer limitation does not justify changing frontend package management; record it if it prevents unrelated frontend resources from becoming healthy.
 
-- [ ] **Step 6: Run repository frontend checks required by full guidance**
+- [x] **Step 6: Run repository frontend checks required by full guidance**
 
 ```bash
 pnpm --dir src/Frontend/public-web lint
@@ -823,11 +823,11 @@ pnpm --dir src/Frontend/backoffice-web build
 
 Expected: all exit zero; do not run root `pnpm install` and do not commit `dist/` output.
 
-- [ ] **Step 7: Write the verification report with exact evidence**
+- [x] **Step 7: Write the verification report with exact evidence**
 
 Create the report with sections `Scope`, `Environment`, `Commands`, `Results`, and `Skipped Or Unavailable`. Copy commands exactly as actually run and state pass/fail plus relevant test counts. Do not claim an unavailable Docker/Aspire/frontend check passed; state the blocker and leave task 5.2 incomplete until required verification can run successfully.
 
-- [ ] **Step 8: Recheck scope and secrets before the final commit**
+- [x] **Step 8: Recheck scope and secrets before the final commit**
 
 ```bash
 git diff --check
@@ -837,7 +837,7 @@ git diff --stat 15bdc95546713a8af47ffd2a9962f99e648d05cd
 
 Inspect the diff for plaintext passwords, committed connection strings, `.env`, generated `bin/`, `obj/`, `dist/`, database files, and changes outside tasks 1.1-5.2. Remove generated artifacts without reverting unrelated user work.
 
-- [ ] **Step 9: Commit verification evidence**
+- [x] **Step 9: Commit verification evidence**
 
 ```bash
 git add docs/superpowers/reports/2026-08-27-identity-domain-and-persistence-verify.md
