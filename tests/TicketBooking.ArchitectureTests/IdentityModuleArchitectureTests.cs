@@ -1,8 +1,8 @@
 using ArchUnitNET.Domain;
 using ArchUnitNET.Loader;
 using ArchUnitNET.TUnit;
-using static ArchUnitNET.Fluent.ArchRuleDefinition;
 using TicketBooking.Identity;
+using static ArchUnitNET.Fluent.ArchRuleDefinition;
 
 namespace TicketBooking.ArchitectureTests;
 
