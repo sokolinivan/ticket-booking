@@ -1,18 +1,19 @@
 # Subagent Progress
 
-- Plan task: Task 10: Translate Known PostgreSQL Uniqueness Conflicts (task 4.3)
-- OpenSpec task: 4.3 Add PostgreSQL integration coverage for duplicate normalized logins, duplicate role and permission codes, and duplicate assignment pairs; verify each known `23505` constraint violation maps to the corresponding controlled conflict and unknown failures remain distinguishable.
+- Plan task: Task 11: Enforce Optimistic Concurrency (task 4.4)
+- OpenSpec task: 4.4 Add integration coverage for concurrent system-user updates and verify a stale write raises the controlled concurrency error without overwriting the committed update.
 - Stage: done
 - Model: standard
 - Review mode: thorough
 - TDD mode: tdd
-- Implementation commit: 9431cb3
-- Changed files: persistence conflict enum/exception, IdentityDbContext, uniqueness conflict tests
-- RED evidence: missing conflict API caused expected CS0246
-- GREEN evidence: build zero warnings/errors; PostgreSQL conflict tests 7/7
-- Review passed: spec PASS; quality APPROVED after fix round 1
-- Review-fix round: 1/2
-- Risk signals: SQL/provider exception handling
+- Implementation commit: 25f9d50
+- Changed files: IdentityDbContext, IdentityPersistenceConflict, IdentityConcurrencyTests
+- RED evidence: initial PostgreSQL concurrency test observed version remained 1 before central advancement
+- GREEN evidence: build zero warnings/errors; concurrency 1/1; PostgreSQL regression 3/3
+- Review passed: spec and quality implementation passed; coordinator directly verified durable report after isolated reviewer could not access worktree scratch
+- Review-fix round: 2/2
+- Risk signals: concurrency/shared mutable state; PostgreSQL
+- Unresolved feedback: none; report confirmed at exact path by coordinator read
 - Unresolved feedback: none
 - Unresolved feedback: none
 - Unresolved feedback: none

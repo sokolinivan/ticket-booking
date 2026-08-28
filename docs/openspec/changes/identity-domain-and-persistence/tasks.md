@@ -20,7 +20,7 @@
 - [x] 4.1 Generate the initial module-owned Identity migration and verify its operations create the schema, five tables, internal keys, indexes, constraints, and concurrency column.
 - [x] 4.2 Add PostgreSQL container integration coverage for migration application, entity round trips, relationships, and archived-user retention; verify the focused integration test suite passes.
 - [x] 4.3 Add PostgreSQL integration coverage for duplicate normalized logins, duplicate role and permission codes, and duplicate assignment pairs; verify each known `23505` constraint violation maps to the corresponding controlled conflict and unknown failures remain distinguishable.
-- [ ] 4.4 Add integration coverage for concurrent system-user updates and verify a stale write raises the controlled concurrency error without overwriting the committed update.
+- [x] 4.4 Add integration coverage for concurrent system-user updates and verify a stale write raises the controlled concurrency error without overwriting the committed update.
 
 ## 5. Verification And Deployment Consistency
 

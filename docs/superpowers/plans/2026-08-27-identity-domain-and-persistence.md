@@ -655,7 +655,7 @@ git commit -m "feat(identity): translate known persistence conflicts"
 - Consumes: `Version` concurrency metadata and `DbUpdateConcurrencyException`.
 - Produces: central version advancement for modified SystemUser/Role/Permission rows and controlled `IdentityPersistenceConflict.Concurrency`; stale state is never retried or overwritten.
 
-- [ ] **Step 1: Write the failing two-context stale-write test**
+- [x] **Step 1: Write the failing two-context stale-write test**
 
 Seed a user, load it into two separate contexts, update distinct profile/audit fields through a narrowly scoped domain mutation method if one is required for the test, save the first, then save the second. Assert first save changes version `1 -> 2`; second save throws controlled concurrency conflict; a third context sees only the first writer’s values and version `2`.
 
@@ -667,15 +667,15 @@ await Assert.That(staleSave).Throws<IdentityPersistenceException>()
     .EqualTo(IdentityPersistenceConflict.Concurrency);
 ```
 
-- [ ] **Step 2: Run the concurrency test red**
+- [x] **Step 2: Run the concurrency test red**
 
 Run `dotnet run --project tests/TicketBooking.IntegrationTests -- --treenode-filter "/*/*/IdentityConcurrencyTests/*" --minimum-expected-tests 1`; expect version not to advance or raw concurrency behavior.
 
-- [ ] **Step 3: Implement central version advancement before SQL generation**
+- [x] **Step 3: Implement central version advancement before SQL generation**
 
 Before base save, iterate modified entries implementing the module’s mutable-version contract (keep that contract internal if introduced). Leave `entry.Property(nameof(...Version)).OriginalValue` unchanged and set current value to checked `original + 1`. Do not increment Added/Unchanged/Deleted rows. Catch `DbUpdateConcurrencyException` after the update returns zero rows and translate it to `IdentityPersistenceConflict.Concurrency`; never retry.
 
-- [ ] **Step 4: Verify stale write and committed-state retention green**
+- [x] **Step 4: Verify stale write and committed-state retention green**
 
 ```bash
 dotnet build tests/TicketBooking.IntegrationTests/TicketBooking.IntegrationTests.csproj
@@ -683,7 +683,7 @@ dotnet run --project tests/TicketBooking.IntegrationTests --no-build -- --treeno
 dotnet run --project tests/TicketBooking.IntegrationTests --no-build -- --treenode-filter "/*/*/IdentityPostgreSqlTests/*" --minimum-expected-tests 1
 ```
 
-- [ ] **Step 5: Commit concurrency behavior**
+- [x] **Step 5: Commit concurrency behavior**
 
 ```bash
 git add src/Backend/Modules/TicketBooking.Identity.Core tests/TicketBooking.IntegrationTests/Identity/IdentityConcurrencyTests.cs
