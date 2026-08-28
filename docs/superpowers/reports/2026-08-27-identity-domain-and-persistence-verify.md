@@ -2,7 +2,7 @@
 
 ## Scope
 
-Task 13 verifies OpenSpec task 5.2 and the Identity domain, PostgreSQL persistence, deployment topology, and repository-wide static checks implemented by Tasks 1-12. Verification repaired only two change-caused formatting defects: a generated migration BOM and architecture-test import ordering.
+Task 13 verifies OpenSpec task 5.2 and the Identity domain, PostgreSQL persistence, deployment topology, and repository-wide static checks implemented by Tasks 1-12. Verification repaired two change-caused formatting defects and one change-caused container restore failure. The Dockerfile predates Tasks 1-12, but Task 1's new API reference to Identity Core made its existing single-project restore layer incomplete; the Task 13 brief explicitly permits the smallest repair for a change-caused verification failure.
 
 ## Environment
 
@@ -55,6 +55,8 @@ POSTGRES_USER=task13_user POSTGRES_PASSWORD=task13_temp_20260828 POSTGRES_DB=tas
 POSTGRES_USER=task13_user POSTGRES_PASSWORD=task13_temp_20260828 POSTGRES_DB=task13_db docker compose -p ticketbooking-task13-verify exec -T postgres psql -U task13_user -d task13_db -Atqc "SELECT value FROM task13_volume_sentinel;"
 POSTGRES_USER=task13_user POSTGRES_PASSWORD=task13_temp_20260828 POSTGRES_DB=task13_db docker compose -p ticketbooking-task13-verify down --volumes --rmi local --remove-orphans
 docker ps -a --filter label=com.docker.compose.project=ticketbooking-task13-verify --format '{{.Names}}' && docker volume ls --filter name=ticketbooking-task13-verify --format '{{.Name}}' && docker network ls --filter name=ticketbooking-task13-verify --format '{{.Name}}' && docker image ls ticketbooking-task13-verify-ticketbooking-api --format '{{.Repository}}:{{.Tag}}'
+docker build --no-cache -f src/Backend/TicketBooking.Api/Dockerfile -t ticketbooking-api:task13-review .
+docker image rm ticketbooking-api:task13-review
 git diff --check
 git status --short
 git diff --stat 15bdc95546713a8af47ffd2a9962f99e648d05cd
@@ -70,15 +72,16 @@ git diff --stat 15bdc95546713a8af47ffd2a9962f99e648d05cd
 - PostgreSQL integration tests: 19 passed, 0 failed, 0 skipped in 9.443 seconds.
 - System tests: 27 passed, 0 failed, 0 skipped.
 - Compose config: exit 0 with injected test-only credentials and no output.
-- Initial isolated Compose runtime acceptance: failed during API image restore because the Dockerfile copied only `TicketBooking.Api.csproj`; `Directory.Packages.props` and the referenced Identity project were unavailable, producing `NU1015` for `Microsoft.AspNetCore.OpenApi` and a skipped project-reference warning. The scoped repair moved the existing full-repository copy before restore.
+- Initial isolated Compose runtime acceptance: failed during API image restore because the Dockerfile copied only `TicketBooking.Api.csproj`; `Directory.Packages.props` and the newly referenced Identity Core project were unavailable, producing `NU1015` for `Microsoft.AspNetCore.OpenApi` and a skipped project-reference warning. Although the Dockerfile predates Tasks 1-12, Task 1's project reference caused this verification failure. The Task 13-permitted repair copies `Directory.Build.props`, `Directory.Packages.props`, and only the API and Identity Core project files before restore, then copies all sources, preserving dependency-layer caching.
 - Repeated isolated Compose runtime acceptance: exit 0. The API image restored, built, and published successfully with 0 warnings and 0 errors. Compose created only the `ticketbooking-task13-verify` project resources; PostgreSQL reached `healthy` and the API reached `running` after the healthy-database dependency completed.
 - API connection setting: `printenv ConnectionStrings__ticketbooking` returned `Host=postgres;Port=5432;Database=task13_db;Username=task13_user;Password=task13_temp_20260828`, proving Compose supplied the equivalent database capability to the API.
 - Named-volume persistence: sentinel table creation and insert returned `CREATE TABLE` and `INSERT 0 1`. PostgreSQL was stopped and removed without deleting its volume, recreated healthy, and the query returned `persists-across-recreation`.
 - Compose cleanup: `down --volumes --rmi local --remove-orphans` removed both containers, the isolated network, `ticketbooking-task13-verify_postgres-data`, and the locally built API image. The subsequent filtered container, volume, network, and image check returned no output.
+- Final Dockerfile review verification: a fresh `--no-cache` image build restored both the API and Identity Core projects, then built and published successfully with 0 warnings and 0 errors. The temporary `ticketbooking-api:task13-review` image was removed afterward.
 - Aspire: the unmodified environment failed DCP startup with a proxy-generated 502; unsetting only `https_proxy` then exposed the trust override and DCP exited. `aspire doctor` with all three overrides removed reported 5 passed, 3 warnings, 0 failed, and the AppHost then started successfully.
 - Aspire topology: `postgres`, `ticketbooking`, and `ticketbooking-api` were Running and Healthy. Explicit waits for `ticketbooking` and `ticketbooking-api` returned Healthy. Hidden installer resources were visible; frontend resources were Waiting while installers ran, matching the known unrelated installer limitation. AppHost stopped successfully.
 - Frontend lint/build: both public-web and backoffice-web linted successfully; both TypeScript/Vite production builds succeeded with 20 modules transformed.
-- Scope checks: fresh `git diff --check` exited 0 with no output. Before report edits, `git status --short` showed the pre-existing modified `.comet/subagent-progress.md` plus the scoped API Dockerfile repair. `git diff --stat 15bdc95546713a8af47ffd2a9962f99e648d05cd` reported 75 files changed, 5,237 insertions, and 3 deletions; inspection found the Identity persistence implementation, tests, deployment topology, and change artifacts/reports only, with no `.env`, database, `bin/`, `obj/`, or `dist/` files in scope.
+- Scope checks: fresh `git diff --check` exited 0 with no output. Before report edits, `git status --short` showed the pre-existing modified `.comet/subagent-progress.md` plus the API Dockerfile repair. `git diff --stat 15bdc95546713a8af47ffd2a9962f99e648d05cd` reported 75 files changed, 5,237 insertions, and 3 deletions; inspection found the Identity persistence implementation, tests, deployment topology, and change artifacts/reports, plus the pre-existing Dockerfile necessarily repaired after Task 1 added the Identity Core reference. No `.env`, database, `bin/`, `obj/`, or `dist/` files were in scope.
 
 ## Skipped Or Unavailable
 

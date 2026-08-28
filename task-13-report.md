@@ -16,16 +16,16 @@ The exact commands, outcomes, failed attempts, environment details, test counts,
 
 ## Scope And Secrets
 
-- Repairs affect only files introduced by Tasks 1-12.
+- Verification repairs are limited to change-caused failures permitted by the Task 13 brief. The Dockerfile predates Tasks 1-12, but Task 1 added the API's Identity Core project reference and thereby made its existing single-project restore layer incomplete; the necessary repair preserves layer caching by copying only central build files and the referenced project files before restore.
 - No authentication, HTTP endpoint, application use-case, Audit, seed, or bootstrap behavior was added.
 - No production passwords, committed deployment connection strings, `.env` files, tokens, certificates, database files, or generated build outputs are included. The tracked verification report records only the disposable acceptance credential used by the exact commands; its isolated volume was deleted during cleanup.
 - The pre-existing dirty `.comet/subagent-progress.md` workflow file was preserved and excluded.
-- Fresh `git diff --check` produced no output. `git status --short` showed only the preserved workflow change and the scoped Dockerfile repair before report edits. Baseline scope inspection against `15bdc95546713a8af47ffd2a9962f99e648d05cd` showed 75 files, 5,237 insertions, and 3 deletions, all within the Identity persistence change and its change artifacts/reports.
+- Fresh `git diff --check` produced no output. `git status --short` showed only the preserved workflow change and the scoped Dockerfile repair before report edits. Baseline scope inspection against `15bdc95546713a8af47ffd2a9962f99e648d05cd` showed 75 files, 5,237 insertions, and 3 deletions: the Identity persistence change and its change artifacts/reports, plus the pre-existing API Dockerfile repaired because of Task 1's new project reference.
 
 ## Limitations
 
 - Aspire CLI 13.5.2 rejects `aspire ps --include-hidden`; `aspire describe --include-hidden` provided equivalent topology evidence.
 - The host's proxy and custom CA environment break DCP loopback certificate validation unless `https_proxy`, `SSL_CERT_FILE`, and `REQUESTS_CA_BUNDLE` are unset for Aspire commands.
 - Aspire reported CLI 13.5.2 is behind AppHost SDK 13.5.3; no environment or toolchain mutation was made.
-- The first Compose runtime attempt exposed a scoped API Dockerfile restore defect: central package versions and the referenced Identity project were absent from the restore layer. The Dockerfile now copies the repository before restore; the unchanged acceptance command then succeeded with 0 build warnings and 0 errors.
+- The first Compose runtime attempt exposed a change-caused API Dockerfile restore defect: central package versions and the referenced Identity project were absent from the restore layer. Although the Dockerfile predates Tasks 1-12, Task 1's API-to-Identity project reference triggered the failure, so the smallest repair is explicitly permitted by the Task 13 brief. The restore layer now copies `Directory.Build.props`, `Directory.Packages.props`, and only the API and Identity Core project files before restore, then copies all sources; this keeps dependency restore cacheable.
 - The isolated Compose project `ticketbooking-task13-verify` was torn down with containers, network, named volume, and locally built API image removed after persistence verification. A filtered Docker resource check returned no output.
