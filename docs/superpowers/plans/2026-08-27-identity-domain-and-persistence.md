@@ -614,30 +614,30 @@ git commit -m "test(identity): verify postgres persistence"
 - Consumes: SQLSTATE `23505`, `PostgresException.ConstraintName`, and names from `IdentityConstraintNames`.
 - Produces: controlled conflict values `DuplicateNormalizedLogin`, `DuplicateRoleCode`, `DuplicatePermissionCode`, `DuplicateSystemUserRole`, and `DuplicateRolePermission`; unknown constraint/provider failures retain their original exception semantics.
 
-- [ ] **Step 1: Write one failing PostgreSQL test for every known constraint**
+- [x] **Step 1: Write one failing PostgreSQL test for every known constraint**
 
 Insert conflicts from separate context instances so domain collection guards do not preempt database validation. For each expected unique constraint, call `SaveChangesAsync()` and assert `IdentityPersistenceException.Conflict` equals its specific enum member and retains the provider exception as `InnerException` without exposing provider text as the controlled message.
 
-- [ ] **Step 2: Write the failing unknown-failure distinction test**
+- [x] **Step 2: Write the failing unknown-failure distinction test**
 
 Cause a PostgreSQL failure not matching a known unique constraint, such as violating a required mapped column via direct SQL, and assert it is not surfaced as `IdentityPersistenceException`. Also unit-test the internal translator with a synthetic/derived `DbUpdateException` path if needed to cover an unknown `23505` constraint name without adding a production-only constraint.
 
-- [ ] **Step 3: Run conflict tests red**
+- [x] **Step 3: Run conflict tests red**
 
 Run `dotnet run --project tests/TicketBooking.IntegrationTests -- --treenode-filter "/*/*/IdentityUniquenessConflictTests/*" --minimum-expected-tests 1`; expect raw `DbUpdateException` failures for known conflicts.
 
-- [ ] **Step 4: Implement narrow translation around both save overloads**
+- [x] **Step 4: Implement narrow translation around both save overloads**
 
 Override synchronous and asynchronous `SaveChanges` entry points used by the module. Catch `DbUpdateException` only when `InnerException is PostgresException { SqlState: PostgresErrorCodes.UniqueViolation } postgres` and `ConstraintName` matches a known constant. Throw the controlled exception for those exact names; use `throw;` for all unknown names and all other database errors. Do not parse `Message`, `Detail`, or table/column text.
 
-- [ ] **Step 5: Run known and unknown conflict tests green**
+- [x] **Step 5: Run known and unknown conflict tests green**
 
 ```bash
 dotnet build tests/TicketBooking.IntegrationTests/TicketBooking.IntegrationTests.csproj
 dotnet run --project tests/TicketBooking.IntegrationTests --no-build -- --treenode-filter "/*/*/IdentityUniquenessConflictTests/*" --minimum-expected-tests 1
 ```
 
-- [ ] **Step 6: Commit conflict translation**
+- [x] **Step 6: Commit conflict translation**
 
 ```bash
 git add src/Backend/Modules/TicketBooking.Identity.Core/Internal/Persistence tests/TicketBooking.IntegrationTests/Identity/IdentityUniquenessConflictTests.cs
