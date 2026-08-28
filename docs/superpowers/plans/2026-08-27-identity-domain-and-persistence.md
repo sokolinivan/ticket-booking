@@ -702,7 +702,7 @@ git commit -m "feat(identity): enforce optimistic concurrency"
 - Consumes: Aspire PostgreSQL hosting API 13.5.3 and API configuration key `ConnectionStrings:ticketbooking`.
 - Produces: Aspire resource names `postgres` and `ticketbooking`; Compose service `postgres`, named persistent volume, health check, API health dependency, and equivalent `ConnectionStrings__ticketbooking` environment setting supplied from deployment variables.
 
-- [ ] **Step 1: Confirm the installed Aspire API before planning syntax is implemented**
+- [x] **Step 1: Confirm the installed Aspire API before planning syntax is implemented**
 
 Run from `src/Aspire/TicketBooking.AppHost`:
 
@@ -713,15 +713,15 @@ aspire docs api search "Aspire.Hosting.PostgreSQL"
 
 Use the 13.5.x signatures returned by the installed tooling rather than copying older Aspire examples.
 
-- [ ] **Step 2: Write failing static topology parity tests**
+- [x] **Step 2: Write failing static topology parity tests**
 
 Read `AppHost.cs` and `compose.yaml` as configuration artifacts. Assert both define PostgreSQL, shared database name `ticketbooking`, API dependency/reference, Compose named volume, `pg_isready` health check, and `ConnectionStrings__ticketbooking`; scan both plus AppHost settings for prohibited literal production passwords/connection strings.
 
-- [ ] **Step 3: Run topology tests red**
+- [x] **Step 3: Run topology tests red**
 
 Run `dotnet run --project tests/TicketBooking.ArchitectureTests -- --treenode-filter "/*/*/IdentityTopologyTests/*" --minimum-expected-tests 1`; expect failure because PostgreSQL and Compose are absent.
 
-- [ ] **Step 4: Add the Aspire PostgreSQL resource and API reference**
+- [x] **Step 4: Add the Aspire PostgreSQL resource and API reference**
 
 Add unversioned `Aspire.Hosting.PostgreSQL` package reference. Using confirmed APIs, model this graph:
 
@@ -735,11 +735,11 @@ builder.AddProject<Projects.TicketBooking_Api>("ticketbooking-api")
 
 Retain both existing Vite resources unchanged. Use AppHost user secrets/deployment parameters for credentials; do not add literal credentials to source.
 
-- [ ] **Step 5: Add equivalent root Compose topology**
+- [x] **Step 5: Add equivalent root Compose topology**
 
 Create `compose.yaml` with `postgres` using deployment-provided `${POSTGRES_USER:?required}`, `${POSTGRES_PASSWORD:?required}`, and `${POSTGRES_DB:-ticketbooking}` values, `pg_isready` health check, a named `postgres-data` volume, and API `depends_on.postgres.condition: service_healthy`. Set API `ConnectionStrings__ticketbooking` from interpolated deployment values, not a committed credential. Build API from its existing Dockerfile and do not add unrelated frontend services.
 
-- [ ] **Step 6: Validate topology syntax and tests**
+- [x] **Step 6: Validate topology syntax and tests**
 
 ```bash
 POSTGRES_USER=test POSTGRES_PASSWORD=test POSTGRES_DB=ticketbooking docker compose config --quiet
@@ -749,7 +749,7 @@ dotnet run --project tests/TicketBooking.ArchitectureTests --no-build -- --treen
 
 Expected: Compose resolves with injected test-only values, solution builds, and parity/security assertions pass.
 
-- [ ] **Step 7: Commit topology parity**
+- [x] **Step 7: Commit topology parity**
 
 ```bash
 git add src/Aspire/TicketBooking.AppHost compose.yaml tests/TicketBooking.ArchitectureTests/IdentityTopologyTests.cs
