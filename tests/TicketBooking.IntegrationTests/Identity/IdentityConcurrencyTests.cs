@@ -9,6 +9,54 @@ namespace TicketBooking.IntegrationTests.Identity;
 public class IdentityConcurrencyTests(PostgreSqlFixture database)
 {
     [Test]
+    public async Task SaveChangesAsync_ModifiedRoleAndPermission_AdvanceFromPreservedOriginalVersions()
+    {
+        await using var context = database.CreateContext();
+        var role = Role.Create(new RoleId(Guid.NewGuid()), "admin", "Administrator");
+        var permission = Permission.Create(new PermissionId(Guid.NewGuid()), "events.publish", "Publish events");
+        context.AttachRange(role, permission);
+        context.Entry(role).Property(entity => entity.Name).IsModified = true;
+        context.Entry(permission).Property(entity => entity.Name).IsModified = true;
+        var roleVersion = context.Entry(role).Property(entity => entity.Version);
+        var permissionVersion = context.Entry(permission).Property(entity => entity.Version);
+        roleVersion.OriginalValue = 7;
+        permissionVersion.OriginalValue = 11;
+
+        context.SavingChanges += (_, _) => throw new SaveInspectionCompleteException();
+        var save = () => context.SaveChangesAsync();
+
+        await Assert.That(save).Throws<SaveInspectionCompleteException>();
+        await Assert.That(roleVersion.OriginalValue).IsEqualTo(7);
+        await Assert.That(roleVersion.CurrentValue).IsEqualTo(8);
+        await Assert.That(permissionVersion.OriginalValue).IsEqualTo(11);
+        await Assert.That(permissionVersion.CurrentValue).IsEqualTo(12);
+    }
+
+    [Test]
+    public async Task SaveChangesAsync_NonModifiedVersionedEntities_LeavesVersionsUntouched()
+    {
+        await using var context = database.CreateContext();
+        var added = Role.Create(new RoleId(Guid.NewGuid()), "added", "Added");
+        var unchanged = Role.Create(new RoleId(Guid.NewGuid()), "unchanged", "Unchanged");
+        var deleted = Role.Create(new RoleId(Guid.NewGuid()), "deleted", "Deleted");
+        context.Add(added);
+        context.Attach(unchanged);
+        context.Attach(deleted);
+        context.Remove(deleted);
+
+        context.SavingChanges += (_, _) => throw new SaveInspectionCompleteException();
+        var save = () => context.SaveChangesAsync();
+
+        await Assert.That(save).Throws<SaveInspectionCompleteException>();
+        await Assert.That(added.Version).IsEqualTo(1);
+        await Assert.That(unchanged.Version).IsEqualTo(1);
+        await Assert.That(deleted.Version).IsEqualTo(1);
+        await Assert.That(context.Entry(added).State).IsEqualTo(EntityState.Added);
+        await Assert.That(context.Entry(unchanged).State).IsEqualTo(EntityState.Unchanged);
+        await Assert.That(context.Entry(deleted).State).IsEqualTo(EntityState.Deleted);
+    }
+
+    [Test]
     public async Task SaveChangesAsync_StaleSystemUserUpdate_ReportsControlledConflictWithoutOverwrite()
     {
         await database.ResetAndMigrateAsync();
@@ -65,4 +113,6 @@ public class IdentityConcurrencyTests(PostgreSqlFixture database)
         null,
         DateTimeOffset.UtcNow,
         "test");
+
+    private sealed class SaveInspectionCompleteException : Exception;
 }
